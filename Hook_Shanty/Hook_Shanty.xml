@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE muclient>
+<!-- MuClient version 5.06-pre -->
+
+<muclient>
+<plugin
+   name="Hook_Shanty"
+   author="BlueFeather"
+   id="2e1106c89712487faa051a1d"
+   language="Lua"
+   purpose="Hook Shanty sing-a-long"
+   save_state="y"
+   date_written="2019-04-22 09:24:07"
+   requires="5.06"
+   version="1.7"
+   >
+
+</plugin>
+
+
+<!--  Get our standard constants -->
+
+<include name="constants.lua"/>
+
+<!--  Aliases  -->
+
+<aliases>
+  <alias match="^shant?y?$" regexp="y" enabled="y" send_to="12" sequence="100"><send>shanty_sing()</send></alias>
+  <alias match="^shant?y? loud$" regexp="y" enabled="y" send_to="12" sequence="100"><send>shanty_yell()</send></alias>
+  <alias match="^shant?y? louder$" regexp="y" enabled="y" send_to="12" sequence="100"><send>shanty_yell_louder()</send></alias>
+  <alias match="^shant?y? help$" regexp="y" enabled="y" send_to="12" sequence="100"><send>shanty_help()</send></alias>
+  <alias match="^shant?y? rel?o?a?d?$" regexp="y" enabled="y" send_to="12" sequence="100"><send>shanty_reload()</send></alias>
+  <alias match="^autoshant?y?$" regexp="y" enabled="y" send_to="12" sequence="100"><send>shanty_autosing()</send></alias>
+  <alias match="^sing$" regexp="y" enabled="y" send_to="12" sequence="100"><send>shanty_startstop()</send></alias>
+</aliases>
+
+<!--  Script  -->
+
+<script>
+<![CDATA[
+require "mw_theme_base"
+require "serialize"
+require "movewindow"
+require "commas"
+require "gmcphelper"
+require "copytable"
+
+-- pull in telnet option handling
+dofile(GetPluginInfo(GetPluginID(),20).."telnet_options.lua")
+-- functions for handling Aardwolf color codes
+dofile(GetPluginInfo(GetPluginID(),20).."aardwolf_colors.lua")
+
+-------------------
+-- Helper functions
+-------------------
+function sb(b) if b then return 'true' else return 'false' end end
+function gb(s) if s == 'true' then return true else return false end end
+function PadString(str, len, char) if char == nil then char = ' ' end return string.rep(char, len - #str) .. str end
+
+-----------------
+-- Default values
+-----------------
+activesinging = gb(GetVariable('activesinging')) or false
+shanty_logo = ColoursToANSI("@Co-}@YHooK@C{-o @CShanty @cv@C1@c.@C7")
+math.randomseed(os.time())
+
+-- set all color codes for AnsiNote
+local c_bright = ANSI(1)
+local c_dark = ANSI(22)
+local c_red = ANSI(31)
+local c_green = ANSI(32)
+local c_yellow = ANSI(33)
+local c_blue = ANSI(34)
+local c_magenta = ANSI(35)
+local c_cyan = ANSI(36)
+local c_white = ANSI(37)
+
+-----------------------------------
+-- Shanty arrays and their triggers
+-----------------------------------
+collection = {
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Soak him in oil till he sprouts a flipper, soak him in oil till he sprouts a flipper @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Put him in the long boat 'til he's sober, put him in the long boat 'til he's sober @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Put him in the long-boat and make him bail her, put him in the long-boat and make him bail her @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Lock him in the guard room 'til he gets sober, lock him in the guard room 'til he gets sober @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Put him in the scuppers with a hosepipe on him, put him in the scuppers with a hosepipe on him @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Pull out the plug and wet him all over, pull out the plug and wet him all over @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Tie him to the taffrail when she's yardarm under, tie him to the taffrail when she's yardarm under @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Heave him by the leg in a runnin' bowline, heave him by the leg in a runnin' bowline @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Scrape the hair off his chest with a hoop-iron razor, scrape the hair off his chest with a hoop-iron razor @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Give 'im a dose of salt and water, give 'im a dose of salt and water @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Stick on his back a mustard plaster, stick on his back a mustard plaster @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Keep him there and make 'im bail 'er, keep him there and make 'im bail 'er @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Give 'im a taste of the bosun's rope-end, give 'im a taste of the bosun's rope-end @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Tie him to the mast and then you flog him, tie him to the mast and then you flog him @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Keel haul him 'till he's sober, keel haul him 'till he's sober @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Shave his chin with a rusty razor, shave his chin with a rusty razor @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Beat 'im o'r wi' a cat-o-nine-tails, beat 'im o'r wi' a cat-o-nine-tails @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Shave his belly with a rusty razor, shave his belly with a rusty razor @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Give 'im a hair of the dog that bit him, give 'im a hair of the dog that bit him @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Put him in the bilge and make him drink it, put him in the bilge and make him drink it @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Put him in bed with the captain's daughter, put him in bed with the captain's daughter @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Hit him on the head with a drunken soldier, hit him on the head with a drunken soldier @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Put him in the back of a paddy wagon, put him in the back of a paddy wagon @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Take him to the pub and get him drunker, take him to the pub and get him drunker @co-}@Yearly in the morning!@c{-o@C",
+  "What shall we do with a drunken sailor, what shall we do with a drunken sailor @co-}@Yearly in the morning?@c{-o@C - Lock him in a room with disco music, lock him in a room with disco music @co-}@Yearly in the morning!@c{-o@C",
+  "Oh, we'd be alright if the wind was in our sails, we'd be alright if the wind was in our sails @co-}@Yand we'll all hang on behind!@c{-o@C",
+  "And we'll ro-o-oll the old chariot along, we'll ro-o-oll the golden chariot along @co-}@Yand we'll all hang on behind!@c{-o@C",
+  "Oh, we'd be alright if we make it round The Horn, we'd be alright if we make it round The Horn @co-}@Yand we'll all hang on behind!@c{-o@C",
+  "Well a night on the town wouldn't do us any harm, oh, a night on the town wouldn't do us any harm @co-}@Yand we'll all hang on behind!@c{-o@C",
+  "And we'll ro-o-oll the old chariot along, we'll ro-o-oll the golden chariot along @co-}@Yand we'll all hang on behind!@c{-o@C",
+  "Now, another festival wouldn't do us any harm, oh, another festival wouldn't do us any harm @co-}@Yand we'll all hang on behind!@c{-o@C",
+  "Safe and sound at home again, let the waters roar, long we've tossed on the rolling main, now we're safe ashore. Don't forget yer old shipmate @co-}@Yfaldee raldee raldee raldee rye-eye-doe!@c{-o@C",
+  "Since we sailed from Plymouth Sound, four years gone, was there ever chummies, now, such as you and I, long we've tossed on the rolling main @co-}@Yfaldee raldee raldee raldee rye-eye-doe!@c{-o@C",
+  "We have worked the self-same gun, quarterdeck division, sponger I and loader you, through the whole commission, long we've tossed on the rolling main @co-}@Yfaldee raldee raldee raldee rye-eye-doe!@c{-o@C",
+  "Oftentimes have we laid out, toil nor danger fearing, tugging out the flapping sail to the weather earring. Don't forget yer old shipmate @co-}@Yfaldee raldee raldee raldee rye-eye-doe!@c{-o@C",
+  "When the middle watch was on, and the time went slow, boy, who could choose a rousing stave, who like Jack or Joe, boy? Don't forget yer old shipmate @co-}@Yfaldee raldee raldee raldee rye-eye-doe!@c{-o@C",
+  "There she swings, an empty hulk, not a soul below now. Number seven starboard mess misses Jack and Joe now. Don't forget yer old shipmate @co-}@Yfaldee raldee raldee raldee rye-eye-doe!@c{-o@C",
+  "But the best of friends must part, fair or foul the weather. Hand yer flipper for a shake, now a drink together. Don't forget yer old shipmate @co-}@Yfaldee raldee raldee raldee rye-eye-doe!@c{-o@C",
+  "The smartest clipper you can find is @co-}@YHo-way, ho, are you 'most done?@c{-o@C she's the Margaret Evans of the Blue Star Line, clear away the track an' let the bullgine run!",
+  "To me hey rig-a-jig in a jaunting gun @co-}@YHo-way, ho, are you 'most done?@c{-o@C with Liza Lee all on my knee, clear away the track an' let the bullgine run!",
+  "O, we're outward bound for the West Street Pier @co-}@YHo-way, ho, are you 'most done?@c{-o@C with Galway shale and Liverpool beer, clear away the track an' let the bullgine run!",
+  "Ah, and when we're out in New York Town @co-}@YHo-way, ho, are you 'most done?@c{-o@C we'll dance them Bowery girls around, clear away the track an' let the bullgine run!",
+  "To me hey rig-a-jig in a jaunting gun @co-}@YHo-way, ho, are you 'most done?@c{-o@C with Liza Lee all on my knee, clear away the track an' let the bullgine run!",
+  "Oh! the Margaret Evans of the Blue Star Line @co-}@YHo-way, ho, are you 'most done?@c{-o@C she's never a day behind her time, clear away the track an' let the bullgine run!",
+  "O, and when we're back in Liverpool town @co-}@YHo-way, ho, are you 'most done?@c{-o@C we'll stand ya's whiskeys all around, clear away the track an' let the bullgine run!",
+  "To me hey rig-a-jig in a jaunting gun @co-}@YHo-way, ho, are you 'most done?@c{-o@C with Liza Lee all on my knee, clear away the track an' let the bullgine run!",
+  "Ah, when I was a young man, in my prime @co-}@YHo-way, ho, are you 'most done?@c{-o@C i'd knock them Scouse girls two at a time, clear away the track an' let the bullgine run!",
+  "Oh, one more pull and that will do! @co-}@YHo-way, ho, are you 'most done?@c{-o@C for we're the boys to kick her through, clear away the track an' let the bullgine run!",
+  "Oh the work was hard and the wages low, i guess its time for us to go @co-}@YOh the voyage is done and the winds don't blow, and it's time for us to leave her.@c{-o@C",
+  "Oh I thought I heard the old man say, oh tomorrow you will get your pay @co-}@YOh the voyage is done and the winds don't blow, and it's time for us to leave her.@c{-o@C",
+  "The winds blew foul and the seas ran high, we shipped up green and none went by @co-}@YOh the voyage is done and the winds don't blow, and it's time for us to leave her.@c{-o@C",
+  "The mate was a bucco and the old man was a Turk, and the boatswain was a begger with a middle name of work @co-}@YOh the voyage is done and the winds don't blow, and it's time for us to leave her.@c{-o@C",
+  "The old man swears, and the mate swears too, the crew all swear, and so would you @co-}@YOh the voyage is done and the winds don't blow, and its time for us to leave her.@c{-o@C",
+  "The starboard pump is like the crew, it's all worn out and will not do @co-}@YOh the voyage is done and the winds don't blow, and it's time for us to leave her.@c{-o@C",
+  "The rats have gone and we the crew, it's the time be-damned that we went too @co-}@YOh the voyage is done and the winds don't blow, and it's time for us to leave her.@c{-o@C",
+  "Well I pray that we shall ne're more see, a hungry ship, the likes of she @co-}@YOh the voyage is done and the winds don't blow, and it's time for us to leave her.@c{-o@C",
+  "Now we are ready to head for the Horn @co-}@YWay, ay, roll an' go!@c{-o@C our boots an' our clothes boys are all in the pawn, to be rollickin' Randy Dandy-Oh!",
+  "Heave a pawl, oh, heave away @co-}@YWay, ay, roll an' go!@c{-o@C the anchor's on board an' the cable's all stored, to be rollickin' Randy Dandy-Oh!",
+  "Oh, man the stout caps'n an' heave with a will @co-}@YWay, ay, roll an' go!@c{-o@C soon we'll be drivin' her 'way up the hill, to be rollickin' Randy Dandy-Oh!",
+  "Heave a pawl, oh, heave away @co-}@YWay, ay, roll an' go!@c{-o@C the anchor's on board an' the cable's all stored, to be rollickin' Randy Dandy-Oh!",
+  "Heave away, bullies, ye parish-rigged bums @co-}@YWay, ay, roll an' go!@c{-o@C take yer hands from yer pockets and don't suck yer thumbs, to be rollickin' Randy Dandy-Oh!",
+  "Heave a pawl, oh, heave away @co-}@YWay, ay, roll an' go!@c{-o@C the anchor's on board an' the cable's all stored, to be rollickin' Randy Dandy-Oh!",
+  "We're outward bound for Vallipo Bay @co-}@YWay, ay, roll an' go!@c{-o@C get crackin', m' lads, 'tis a hell o' a way, to be rollickin' Randy Dandy-Oh!",
+  "Old Billy Riley was a dancing master. @co-}@YOld Billy Riley, oh, Old Billy Riley!@c{-o@C",
+  "Old Billy Riley's master of a drogher. @co-}@YOld Billy Riley, oh, Old Billy Riley!@c{-o@C",
+  "Master of a drogher bound for Antigua. @co-}@YOld Billy Riley, oh, Old Billy Riley!@c{-o@C",
+  "Old Billy Riley has a nice young daughter. @co-}@YOld Billy Riley, oh, Old Billy Riley!@c{-o@C",
+  "Oh Missy Riley, little Missy Riley. @co-}@YOld Billy Riley, oh, Old Billy Riley!@c{-o@C",
+  "Had a pretty daughter, but we can't get at her. @co-}@YOld Billy Riley, oh, Old Billy Riley!@c{-o@C",
+  "Screw her up and away we go, boys. @co-}@YOld Billy Riley, oh, Old Billy Riley!@c{-o@C",
+  "One more pull and then belay, boys. @co-}@YOld Billy Riley, oh, Old Billy Riley!@c{-o@C",
+  "Help me, Domen, I'm bully in the alley, @co-}@Yway, hey, bully in the alley!@c{-o@C Help me, Domen, I'm bully in the alley, bully down in shinbone al!",
+  "Zoot is the girl that I love dearly, @co-}@Yway, hey, bully in the alley.@c{-o@C Zoot is the girl that I spliced dearly, bully down in shinbone al.",
+  "For seven long years I courted little Zoot, @co-}@Yway, hey, bully in the alley.@c{-o@C But all she did was dilly and dally, bully down in shinbone al.",
+  "I ever get back, I'll marry little Zoot, @co-}@Yway, hey, bully in the alley.@c{-o@C Have six kids and live in Shin-bone Alley, bully down in shinbone al.",
+  "O, my name was Captain Robbo, as I sailed, as I sailed. @co-}@YMy name was Captain Robbo and God's laws I did forbid,@c{-o@C and so wickedly I did as I sailed, as I sailed.",
+  "O, I murdered William Moore as I sailed, as I sailed. @co-}@YI laid him in his gore, not many leagues from the shore,@c{-o@C o, I murdered William Moore, as I sailed, as I sailed.",
+  "O, I spied three ships from Spain, as I sailed, as I sailed. @co-}@YI spied three ships from Spain, and I fired on them a-main,@c{-o@C and most of them I slain, as I sailed, as I sailed.",
+  "Come all you young and old, see me die, see me die. @co-}@YYou are welcome to my goal, and by it I lost my soul,@c{-o@C come all you young and old, I must die, I must die.",
+  "Oh, Nancy Dawson, Hi-oh! @co-}@YCheerly, man!@c{-o@C She rubbed the Bo'sun, Hi-oh! @co-}@YCheerly, man!@c{-o@C That was a caution, Hi-oh!",
+  "Oh, Sally Racket, Hi-oh! @co-}@YCheerly, man!@c{-o@C Pawned my best jacket, Hi-oh! @co-}@YCheerly, man!@c{-o@C And sold pawn the ticket, Hi-oh!",
+  "Oh, Kitty Carson, Hi-oh! @co-}@YCheerly, man!@c{-o@C Jitted the parson, Hi-oh! @co-}@YCheerly, man!@c{-o@C Married a mason, Hi-oh!",
+  "Oh, Betsy Baker, Hi-oh! @co-}@YCheerly, man!@c{-o@C Lived in Long Acre, Hi-oh! @co-}@YCheerly, man!@c{-o@C Married a quaker, Hi-oh!",
+  "Oh, Jenny Walker, Hi-oh! @co-}@YCheerly, man!@c{-o@C Married a hawker, Hi-oh! @co-}@YCheerly, man!@c{-o@C That was a corker, Hi-oh!",
+  "Oh, Polly Riddle, Hi-oh! @co-}@YCheerly, man!@c{-o@C Broke her new fiddle, Hi-oh! @co-}@YCheerly, man!@c{-o@C Right through the middle, Hi-oh!",
+  "As I was going to Derby, 'twas on a market day, I met the finest ram, sirs, that ever was fed upon hay. @co-}@YThat's a lie, that's a lie, that's a lie, a lie, a lie!@c{-o@C",
+  "This ram and I got drunk, sir, as drunk as drunk could be, and when we sobered up, sir, we were far away out on the sea. @co-}@YThat's a lie, that's a lie, that's a lie, a lie, a lie!@c{-o@C",
+  "This wonderful old ram, sir, was playful as a kid, he swallowed the captain's spyglass along with the bo'sun's fid. @co-}@YThat's a lie, that's a lie, that's a lie, a lie, a lie!@c{-o@C",
+  "One morning on the poop, sir, afore eight bells was struck. He climbed up to the sky's I yard an' sat down on the truck. @co-}@YThat's a lie, that's a lie, that's a lie, a lie, a lie!@c{-o@C",
+  "This wonderful ol' ram, sir, he tried a silly trick, he tried to jump a five-barred fence and landed in a rick. @co-}@YThat's a lie, that's a lie, that's a lie, a lie, a lie!@c{-o@C",
+  "This wonderful ol' ram, sir, it grew two horns of brass, one grew out o' his shoulder blade, t'other turned into a mast. @co-}@YThat's a lie, that's a lie, that's a lie, a lie, a lie!@c{-o@C",
+  "An' when this ram was killed, sir, the butcher was covered in blood. Five and twenty butcher boys was carried away the flood. @co-}@YThat's a lie, that's a lie, that's a lie, a lie, a lie!@c{-o@C",
+  "An' when this ram was dead, sir, they buried it in St. Joan's, it took ten men an' an elephant to carry one of its bones. @co-}@YThat's a lie, that's a lie, that's a lie, a lie, a lie!@c{-o@C",
+  "Come all you young sailor men, listen to me, I'll sing you a song of the fish in the sea. @co-}@YBlow ye winds westerly, blow jolly sou'wester, steady as she goes.@c{-o@C",
+  "Up jumps the eel with his slippery tail, climbs up aloft and reefs the topsail. @co-}@YBlow ye winds westerly, blow jolly sou'wester, steady as she goes.@c{-o@C",
+  "Then up jumps the shark with his nine rows of teeth, saying: You eat the dough boys, and I'll eat the beef! @co-}@YBlow ye winds westerly, blow jolly sou'wester, steady as she goes.@c{-o@C",
+  "Up jumps the whale... the largest of all, saying: If you want any wind, well, I'll blow ye a squall! @co-}@YBlow ye winds westerly, blow jolly sou'wester, steady as she goes.@c{-o@C",
+  "We are outward bound for Mobile town @co-}@YWith a heave-o, haul!@c{-o@C An' we'll heave the ol' wheel round an' round @co-}@Ygood mornin' ladies all!@c{-o@C",
+  "An' when we get to Mobile town @co-}@YWith a heave-o, haul!@c{-o@C Oh, 'tis there we'll drink an' sorrow drown @co-}@Ygood mornin' ladies all!@c{-o@C",
+  "Them gals down south are free an' gay @co-}@YWith a heave-o, haul!@c{-o@C Wid them we'll spend our hard-earned pay @co-}@Ygood mornin' ladies all!@c{-o@C",
+  "We'll swing around, we'll have good fun @co-}@YWith a heave-o, haul!@c{-o@C An' soon we'll be back on the homeward run @co-}@Ygood mornin' ladies all!@c{-o@C",
+  "An' when we get to Bristol town @co-}@YWith a heave-o, haul!@c{-o@C For the very last time we'll waltz around @co-}@Ygood mornin' ladies all!@c{-o@C",
+  "With Adra and Kya an' Mirrim too @co-}@YWith a heave-o, haul!@c{-o@C We'll drink an' dance wid a hullabaloo @co-}@Ygood mornin' ladies all!@c{-o@C",
+  "So a long goodbye to all you dears @co-}@YWith a heave-o, haul!@c{-o@C Don't cry for us, don't waste yer tears @co-}@Ygood mornin' ladies all!@c{-o@C",
+  "Oh, aloft this yard must go. Ooh! Up aloft from down below. @co-}@YWhy can't ye be so handy-o! Handy, me boys, so handy!@c{-o@C",
+  "Growl ye may, but go ye must. Growl too much an yer head they'll bust. @co-}@YWhy can't ye be so handy-o! Handy, me boys, so handy!@c{-o@C",
+  "Oh, a bully ship an' a bully crew. Oh, we're the gang for the kick 'er through. @co-}@YWhy can't ye be so handy-o! Handy, me boys, so handy!@c{-o@C",
+  "Yer advance has gone, yer at sea again. Hey, bound round the horn through the hail an' rain. @co-}@YWhy can't ye be so handy-o! Handy, me boys, so handy!@c{-o@C",
+  "Sing an' haul, an' haul an' sing. Up aloft this yard we'll swing. @co-}@YWhy can't ye be so handy-o! Handy, me boys, so handy!@c{-o@C",
+  "Up aloft that yard must go. For we are outward bound, ye know. @co-}@YWhy can't ye be so handy-o! Handy, me boys, so handy!@c{-o@C",
+  "A handy ship an' a handy crew. A handy Mate an Old Man too. @co-}@YWhy can't ye be so handy-o! Handy, me boys, so handy!@c{-o@C",
+  "@co-}@YWhy don't you blow high-O! Come roll me over.@c{-o@C One man to strike the bell, two men to man the wheel, three men, to gallant braces, four men to furl t'garns'ls, five men to bunt-a-bo. @co-}@YWhy don't you blow high-O! Come roll me over.@c{-o@C",
+  "Oh, don't yiz hear the old man say? @co-}@YGoodbye, fare-ye-well! Goodbye, fare-ye-well!@c{-o@C Oh, don't yiz hear the old man say? @co-}@YHoor-raw me boys! We're homeward bound!@c{-o@C",
+  "We're Homeward bound to Liverpool Town, @co-}@YGoodbye, fare-ye-well! Goodbye, fare-ye-well!@c{-o@C Where all them judies, they will come down @co-}@YHoor-raw me boys! We're homeward bound!@c{-o@C",
+  "An' when we gits to the Wallasey Gates @co-}@YGoodbye, fare-ye-well! Goodbye, fare-ye-well!@c{-o@C Sally an' Olly for their flash men do wait @co-}@YHoor-raw me boys! We're homeward bound!@c{-o@C",
+  "An' one to the other ye'll hear them say, @co-}@YGoodbye, fare-ye-well! Goodbye, fare-ye-well!@c{-o@C Here comes Johnny with his fourteen mont's pay! @co-}@YHoor-raw me boys! We're homeward bound!@c{-o@C",
+  "We meet these fly gals an' we'll ring the ol' bell, @co-}@YGoodbye, fare-ye-well! Goodbye, fare-ye-well!@c{-o@C With them judies, we'll raise merry hell @co-}@YHoor-raw me boys! We're homeward bound!@c{-o@C",
+  "We're homeward bound to the gals o' the town. @co-}@YGoodbye, fare-ye-well! Goodbye, fare-ye-well!@c{-o@C And stamp up me bullies an' heave it around. @co-}@YHoor-raw me boys! We're homeward bound!@c{-o@C",
+  "An' when we gits home, boys, oh, won't we fly round. @co-}@YGoodbye, fare-ye-well! Goodbye, fare-ye-well!@c{-o@C We'll heave up the anchor to this bully sound. @co-}@YHoor-raw me boys! We're homeward bound!@c{-o@C",
+  "We're all homeward bound for the old backyard. @co-}@YGoodbye, fare-ye-well! Goodbye, fare-ye-well!@c{-o@C Then heave, me bullies, we're all bound homeward. @co-}@YHoor-raw me boys! We're homeward bound!@c{-o@C",
+  "Heave with a will, boys, oh, heave long an' strong. @co-}@YGoodbye, fare-ye-well! Goodbye, fare-ye-well!@c{-o@C Sing a good chorus for 'tis a good song. @co-}@YHoor-raw me boys! We're homeward bound!@c{-o@C",
+  "We're homeward bound, we'll have yiz to know. @co-}@YGoodbye, fare-ye-well! Goodbye, fare-ye-well!@c{-o@C An' over the water to England must go! @co-}@YHoor-raw me boys! We're homeward bound!@c{-o@C",
+  "Oh! Do, my Johnny Boker, come rock and roll me over. @co-}@YDo! My Johnny Boker, do!@c{-o@C",
+  "Oh! Do, my Johnny Boker, the skipper is a rover. @co-}@YDo! My Johnny Boker, do!@c{-o@C",
+  "Oh! Do, my Johnny Boker, the mate he's never sober. @co-}@YDo! My Johnny Boker, do!@c{-o@C",
+  "Oh! Do, my Johnny Boker, the Bo'sun is a tailor. @co-}@YDo! My Johnny Boker, do!@c{-o@C",
+  "Oh! Do, my Johnny Boker, we'll all go on a jamboree. @co-}@YDo! My Johnny Boker, do!@c{-o@C",
+  "Oh! Do, my Johnny Boker, the Packet is a Rollin'. @co-}@YDo! My Johnny Boker, do!@c{-o@C",
+  "Oh! Do, my Johnny Boker, we'll pull and haul together. @co-}@YDo! My Johnny Boker, do!@c{-o@C",
+  "Oh! Do, my Johnny Boker, we'll haul for better weather. @co-}@YDo! My Johnny Boker, do!@c{-o@C",
+  "Oh! Do, my Johnny Boker, and soon we'll be in London Town. @co-}@YDo! My Johnny Boker, do!@c{-o@C",
+  "Oh! Do, my Johnny Boker, come rock and roll me over. @co-}@YDo! My Johnny Boker, do!@c{-o@C",
+  "I dreamed a dream the other night @co-}@Ylowlands, lowlands away me John@c{-o@C my love she came, dressed all in white @co-}@Ylowlands away!@c{-o@C",
+  "I dreamed my love came in my sleep @co-}@Ylowlands, lowlands away me John@c{-o@C her cheeks were wet, her eyes did weep @co-}@Ylowlands away!@c{-o@C",
+  "She came to me at my bedside @co-}@Ylowlands, lowlands away me John@c{-o@C all dressed in white, like some fair bride @co-}@Ylowlands away!@c{-o@C",
+  "And bravely in her bosom fair @co-}@Ylowlands, lowlands away me John@c{-o@C her red, red rose, my love did wear @co-}@Ylowlands away!@c{-o@C",
+  "She made no sound, no word she said @co-}@Ylowlands, lowlands away me John@c{-o@C and then I knew my love was dead @co-}@Ylowlands away!@c{-o@C",
+  "Then I awoke to hear the cry @co-}@Ylowlands, lowlands away me John@c{-o@C oh watch on deck, oh watch, ahoy @co-}@Ylowlands away!@c{-o@C",
+  "In Amsterdam there lived a maid, @co-}@YMark well what I do say!@c{-o@C In Amsterdam there lived a maid, and she was mistress of her trade. I'll go no more a-roving with you fair maid!",
+  "I asked this maid to take a walk, @co-}@YMark well what I do say!@c{-o@C I asked this maid out for a walk, that we might have some private talk. I'll go no more a roving with you fair maid!",
+  "Then a great big Dutchman rammed my bow, @co-}@YMark well what I do say!@c{-o@C For a great big Dutchman rammed my bow, and said 'Young man, dees ees meine frau!' I'll go no more a roving with you fair maid!",
+  "Then take fair warning boys from me, @co-}@YMark well what I do say!@c{-o@C So take fair warning boys from me with other men's wives, don't make too free I'll go no more a roving with you fair maid!",
+  "There was a ship, she sailed to Spain @co-}@YO ho, roll and go!@c{-o@C There was a ship came home again. Shala's on the topsail yard!",
+  "And what do you think was in her hold? @co-}@YO ho, roll and go!@c{-o@C There was diamonds, there was gold. Shala's on the topsail yard!",
+  "And what was in her lazarette? @co-}@YO ho, roll and go!@c{-o@C Good split peas and bad bull meat. Shala's on the topsail yard!",
+  "O, many a sailorman gets drowned, @co-}@YO ho, roll and go!@c{-o@C Many a sailorman gets drowned. Shala's on the topsail yard!",
+  "As I rolled out one mornin' I met a lady fair. @co-}@YTymme, hey-rig-a-jig an' a ha-ha, good mornin', ladies all. Away, you roller bowler!@c{-o@C",
+  "The first time that I saw her, that saucy gal of mine. @co-}@YTymme, hey-rig-a-jig an' a ha-ha, good mornin', ladies all. Away, you roller bowler!@c{-o@C",
+  "But when she found that I was skint she left me standing there. @co-}@YTymme, hey-rig-a-jig an' a ha-ha, good mornin', ladies all. Away, you roller bowler!@c{-o@C",
+  "I squared me yards an' sailed away an' to the ship I went. @co-}@YTymme, hey-rig-a-jig an' a ha-ha, good mornin', ladies all. Away, you roller bowler!@c{-o@C",
+  "She winked & flipped a flipper, she thought I was a mate. @co-}@YTymme, hey-rig-a-jig an' a ha-ha, good mornin', ladies all. Away, you roller bowler!@c{-o@C",
+  "Running down to Cuba with a load of sugar, @co-}@Yweigh, me boys, to Cuba!@c{-o@C Make her run you, lime juice squeezes, @co-}@Yrunning down to Cuba.@c{-o@C",
+  "O, I got a sister, she's nine feet tall, @co-}@Yweigh, me boys, to Cuba!@c{-o@C Sleeps in the kitchen with her feet in the hall, @co-}@Yrunning down to Cuba.@c{-o@C",
+  "The captain he will trim the sails, @co-}@Yweigh, me boys, to Cuba!@c{-o@C Winging the water over the rails, @co-}@Yrunning down to Cuba.@c{-o@C",
+  "Give me a gal can dance Fandango, @co-}@Yweigh, me boys, to Cuba!@c{-o@C Round as a melon and sweet as a mango, @co-}@Yrunning down to Cuba.@c{-o@C",
+  "Load this sugar and home-ward go, @co-}@Yweigh, me boys, to Cuba!@c{-o@C Mister mate, he told me so, @co-}@Yrunning down to Cuba.@c{-o@C",
+  "The mate was drunk and he went below to take a swig at his bottle o, @co-}@Yso early in the morning the sailor likes his bottle o, the bottle o, the bottle o, the sailor loves his bottle o!@c{-o@C",
+  "A bottle of rum, a bottle of gin, a bottle of Irish whiskey o, @co-}@Yso early in the morning the sailor likes his bottle o, the bottle o, the bottle o, the sailor loves his bottle o!@c{-o@C",
+  "The baccy o, tabaccy o, the sailor loves his baccy o, @co-}@Yso early in the morning the sailor likes his bottle o, the bottle o, the bottle o, the sailor loves his bottle o!@c{-o@C",
+  "A packet of shag, a packet of cut, a plug of hard terbaccy o, @co-}@Yso early in the morning the sailor likes his bottle o, the bottle o, the bottle o, the sailor loves his bottle o!@c{-o@C",
+  "The lassies o, the maidens o, the sailor loves the judies o, @co-}@Yso early in the morning the sailor likes his bottle o, the bottle o, the bottle o, the sailor loves his bottle o!@c{-o@C",
+  "A lass from the 'pool, a girl from the Tyne, a chowlah so fine and dandy o, @co-}@Yso early in the morning the sailor likes his bottle o, the bottle o, the bottle o, the sailor loves his bottle o!@c{-o@C",
+  "A bully rough house, a bully rough house, the sailor like his rough house o, @co-}@Yso early in the morning the sailor likes his bottle o, the bottle o, the bottle o, the sailor loves his bottle o!@c{-o@C",
+  "Tread on me coat, and all hands in, a bully good rough and tumble o, @co-}@Yso early in the morning the sailor likes his bottle o, the bottle o, the bottle o, the sailor loves his bottle o!@c{-o@C",
+  "A sing song o, a sing song o, the sailor likes a sing song o, @co-}@Yso early in the morning the sailor likes his bottle o, the bottle o, the bottle o, the sailor loves his bottle o!@c{-o@C",
+  "A drinking song, a song of love, a ditty of seas and shipmates o, @co-}@Yso early in the morning the sailor likes his bottle o, the bottle o, the bottle o, the sailor loves his bottle o!@c{-o@C",
+  "Oh, poor old Stormy's dead and gone, storm along boys! Storm along Vilgan! Oh, poor old Stormy's dead and gone, @co-}@Yah-ha, come along get along, stormy along Vilgan!@c{-o@C",
+  "I dug his grave with a silver spade, storm along boys! Storm along Vilgan! I dug his grave with a silver spade, @co-}@Yah-ha, come along get along, stormy along Vilgan!@c{-o@C",
+  "I lower'd him down with a golden chain, storm along boys! Storm along Vilgan! I lower'd him down with a golden chain, @co-}@Yah-ha, come along get along, stormy along Vilgan!@c{-o@C",
+  "I carried him away to Montego Bay, storm along boys! Storm along Vilgan! I carried him away to Montego Bay, @co-}@Yah-ha, come along get along, stormy along Vilgan!@c{-o@C",
+  "Look ahead, look-astern, look the weather in the lee! @co-}@YBlow high! Blow low! And so sailed we.@c{-o@C I see a wreck to windward, and a lofty ship to lee! @co-}@YA-sailing down along the coast of High Barbary.@c{-o@C ",
+  "'O, are you a pirate or a man o' war?' cried we. @co-}@YBlow high! Blow low! And so sailed we.@c{-o@C 'O no! I'm not a pirate but a man-o-war,' cried he. @co-}@YA-sailing down along the coast of High Barbary.@c{-o@C ",
+  "We'll back up our topsails and heave vessel to. @co-}@YBlow high! Blow low! And so sailed we.@c{-o@C For we have got some letters to be carried home by you. @co-}@YA-sailing down along the coast of High Barbary.@c{-o@C ",
+  "For broadside, for broadside they fought all on the main. @co-}@YBlow high! Blow low! And so sailed we.@c{-o@C Until at last the frigate shot the pirate's mast away. @co-}@YA-sailing down along the coast of High Barbary.@c{-o@C ",
+  "With cutlass and gun, o we fought for hours three. @co-}@YBlow high! Blow low! And so sailed we.@c{-o@C The ship it was their coffin and their grave it was the sea @co-}@YA-sailing down along the coast of High Barbary.@c{-o@C ",
+  "A poor old man came riding by. @co-}@YAnd we say so, and we know so.@c{-o@C O, a poor old man came riding by, o, poor old man.",
+  "Says I, 'Old man, your horse will die.' @co-}@YAnd we say so, and we know so.@c{-o@C And if he dies we'll tan his hide, o, poor old man.",
+  "And if he don't, I'll ride him again. @co-}@YAnd we say so, and we know so.@c{-o@C And I'll ride him 'til the Lord knows when, o, poor old man.",
+  "He's dead as a nail in the lamp room door. @co-}@YAnd we say so, and we know so.@c{-o@C And he won't come worrying us no more, o, poor old man.",
+  "We'll use the hair of his tail to sew our sails. @co-}@YAnd we say so, and we know so.@c{-o@C And the iron of his shoes to make deck nails, o, poor old man.",
+  "Drop him down with a long long rope. @co-}@YAnd we say so, and we hope so.@c{-o@C Where the sharks have his body and the devil takes his soul! O, poor old man.",
+  "@co-}@YRanzo, Ranzo, weigh heigh!@c{-o@C Did you ever see a wild goose sailing o'er the ocean? @co-}@YRanzo, Ranzo, weigh heigh!@c{-o@C They're just like them pretty girls, when they gets the notion.",
+  "@co-}@YRanzo, Ranzo, weigh heigh!@c{-o@C The other morning I was walking by the river. @co-}@YRanzo, Ranzo, weigh heigh!@c{-o@C When I saw a young girl walking with her topsails all a-quiver.",
+  "@co-}@YRanzo, Ranzo, weigh heigh!@c{-o@C I said, 'Pretty fair maid and how are you this morning?' @co-}@YRanzo, Ranzo, weigh heigh!@c{-o@C She said none the better for the seeing of you.",
+  "The worst old ship that ever did sail, sailed out of Harwich on a windy day. @co-}@YAnd we're waiting for the day, waiting for the day that we get our pay.@c{-o@C",
+  "She was built in Roman time, held together with bits of twine. @co-}@YAnd we're waiting for the day, waiting for the day that we get our pay.@c{-o@C",
+  "Nothing in the galley—nothing in the hold, but the skipper's turned in with a bag of gold. @co-}@YAnd we're waiting for the day, waiting for the day that we get our pay.@c{-o@C",
+  "Off Orford Ness she sprang a leak, hear her poor old timbers creak. @co-}@YAnd we're waiting for the day, waiting for the day that we get our pay.@c{-o@C",
+  "We pumped our way round scalby Ness, when the wind backed round to the west-nor'-west. @co-}@YAnd we're waiting for the day, waiting for the day that we get our pay.@c{-o@C",
+  "Into the Humber and up the town, pump you blighters—pump or drown. @co-}@YAnd we're waiting for the day, waiting for the day that we get our pay.@c{-o@C",
+  "Oh, where am I to go, M'Johnnies, oh where am I to go? @co-}@YTimme way hey hey, high roll and go.@c{-o@C Oh, where am I to go, M'Johnnies, oh where am I to go? @co-}@YFor I'm a young sailor boy, and where am I to go?@c{-o@C",
+  "Way up on that t'gallant yard, that's where you’re bound to go. @co-}@YTimme way hey hey, high roll and go.@c{-o@C Oh, way up on that t'gallant yard, that's where you’re bound to go. @co-}@YFor I'm a young sailor boy, and where am I to go?@c{-o@C",
+  "Way up on that t'gallant yard and take the gans'l in. @co-}@YTimme way hey hey, high roll and go.@c{-o@C Oh, way up on that t'gallant yard and take the gans'l in. @co-}@YFor I'm a young sailor boy, and where am I to go?@c{-o@C",
+  "You're bound away to Kingston town, that's where you're bound to go. @co-}@YTimme way hey hey, high roll and go.@c{-o@C You're bound away to Kingston town, that's where you're bound to go. @co-}@YFor I'm a young sailor boy, and where am I to go?@c{-o@C",
+  "Whiskey is the life of man, @co-}@Ywhiskey, Johnny!@c{-o@C O, whiskey is the life of man, @co-}@Ywhiskey for my Johnny O!@c{-o@C",
+  "O, I drink whiskey when I can @co-}@Ywhiskey, Johnny!@c{-o@C Whiskey from an old tin can, @co-}@Ywhiskey for my Johnny O!@c{-o@C",
+  "Whiskey gave me a broken nose, @co-}@Ywhiskey, Johnny!@c{-o@C Whiskey made me pawn my clothes, @co-}@Ywhiskey for my Johnny O!@c{-o@C",
+  "Whiskey drove me around Cape Horn, @co-}@Ywhiskey, Johnny!@c{-o@C It was many a month when I was gone, @co-}@Ywhiskey for my Johnny O!@c{-o@C",
+  "I thought I heard the old man say: @co-}@Ywhiskey, Johnny!@c{-o@C I'll treat my crew in a decent way, @co-}@Ywhiskey for my Johnny O!@c{-o@C",
+  "A glass of grog for every man! @co-}@Ywhiskey, Johnny!@c{-o@C And a bottle for the Chantey Man. @co-}@Ywhiskey for my Johnny O!@c{-o@C",
+  "As we were a-fishing off Happisburgh light, shooting and hauling and trawling all night. @co-}@YIn the windy old weather, stormy old weather, when the wind blows we all pull together, when up jumped a herring, the Queen of the sea says 'Now, old skipper, you cannot catch me'@c{-o@C",
+  "We sighted a Thresher-a-slashin' his tail, 'Time now Old Skipper to hoist up your sail.' @co-}@YIn the windy old weather, stormy old weather, when the wind blows we all pull together, when up jumped a herring, the Queen of the sea says 'Now, old skipper, you cannot catch me'@c{-o@C",
+  "And up jumps a Slipsole as strong as a horse, says now, 'Old Skipper, you're miles off course.' @co-}@YIn the windy old weather, stormy old weather, when the wind blows we all pull together, when up jumped a herring, the Queen of the sea says 'Now, old skipper, you cannot catch me'@c{-o@C",
+  "Then along comes a plaice, who's got spots on his side says 'Not much longer, these seas you can ride.' @co-}@YIn the windy old weather, stormy old weather, when the wind blows we all pull together, when up jumped a herring, the Queen of the sea says 'Now, old skipper, you cannot catch me'@c{-o@C",
+  "Then up rears a conger, as long as a mile, 'Wind's coming east'ly' he says with a smile. @co-}@YIn the windy old weather, stormy old weather, when the wind blows we all pull together, when up jumped a herring, the Queen of the sea says 'Now, old skipper, you cannot catch me'@c{-o@C",
+  "I think what that these fishes are sayin' is right, we'll haul up our gear now an' steer for the light. @co-}@YIn the windy old weather, stormy old weather, when the wind blows we all pull together, when up jumped a herring, the Queen of the sea says 'Now, old skipper, you cannot catch me'@c{-o@C",
+  "We'll heave him up an away we'll go, @co-}@Y'way, me Wars!@c{-o@C We'll heave him up an away we'll go, @co-}@Ywe're all bound over the mounten!@c{-o@C",
+  "We'll heave him up from down below, @co-}@Y'way, me Wars!@c{-o@C This is where the cocks do crow, @co-}@Ywe're all bound over the mounten!@c{-o@C",
+  "And if we drown while we are young, @co-}@Y'way, me Wars!@c{-o@C It's better to drown than to wait to be hung, @co-}@Ywe're all bound over the mounten!@c{-o@C",
+  "Oh, growl ye may but go ye must, @co-}@Y'way, me Wars!@c{-o@C If ye growl too hard yer head they'll bust, @co-}@Ywe're all bound over the mounten!@c{-o@C",
+  "Up sox, you cocks, hand her two blocks, @co-}@Y'way, me Wars!@c{-o@C An' go below to yer ol' ditty box, @co-}@Ywe're all bound over the mounten!@c{-o@C",
+  "Oh, rock an shake 'er, one more drag, @co-}@Y'way, me Wars!@c{-o@C Oh, bend yer duds an' pack yer bag, @co-}@Ywe're all bound over the mounten!@c{-o@C"
+}
+
+function shanty_sing()
+  j = table.getn(collection)
+  i = math.random(1, j)
+  -- Note("Shanty number (1, "..j..") "..i)
+  SendNoEcho("'"..collection[i].." :O")
+end
+
+function shanty_yell()
+  j = table.getn(collection)
+  i = math.random(1, j)
+  -- Note("Shanty number (1, "..j..") "..i)
+  SendNoEcho("yell @C"..collection[i].."@w")
+end
+
+function shanty_yell_louder()
+  j = table.getn(collection)
+  i = math.random(1, j)
+  -- Note("Shanty number (1, "..j..") "..i)
+  SendNoEcho("yell @C"..string.gsub(string.gsub(string.gsub(string.upper(canonicalize_colours(collection[i])),"@X","@x"),"O%-}","o%-}"),"{%-O","{%-o").."@w")
+end
+
+function shanty_autosing()
+  if activesinging then
+    j = table.getn(collection)
+    i = math.random(1, j)
+    -- Note("Shanty number (1, "..j..") "..i)
+    SendNoEcho("'"..collection[i].." :O")
+  end
+end
+
+function shanty_startstop()
+  if activesinging then
+    AnsiNote(shanty_logo..ColoursToANSI("@w auto singing turned @W[ @ROFF @W]@w"))
+    activesinging = false
+    SetVariable('activesinging', sb(activesinging))
+  else
+    AnsiNote(shanty_logo..ColoursToANSI("@w auto singing turned @W[ @GON @W]@w"))
+    activesinging = true
+    SetVariable('activesinging', sb(activesinging))
+  end
+end
+
+-----------------
+-- Shanty helpers
+-----------------
+function shanty_help()
+  AnsiNote(ColoursToANSI('@C{-o @Y------------------@C[  ')..shanty_logo..ColoursToANSI('  @C]@Y------------------ @Co-}@w'))
+  AnsiNote()
+  AnsiNote(ColoursToANSI('  @CCommands:'))
+  AnsiNote(ColoursToANSI('    @Yshanty        @w- sing one random shanty'))
+  AnsiNote(ColoursToANSI('    @Yshanty loud   @w- yell one random shanty'))
+  AnsiNote(ColoursToANSI('    @Yshanty louder @w- yell one random shanty IN ALL CAPS'))
+  AnsiNote(ColoursToANSI('    @Yautoshanty    @w- same as shanty, can be switched ON/OFF by @Ysing'))
+  if activesinging then
+    AnsiNote(ColoursToANSI('    @Ysing          @w- switch for @Yautoshanty @w                NOW: [@GON@w]'))
+  else
+    AnsiNote(ColoursToANSI('    @Ysing          @w- switch for @Yautoshanty @w                NOW: [@ROFF@w]'))
+  end
+  AnsiNote(ColoursToANSI('    @Yshanty help   @w- this screen'))
+  AnsiNote()
+  AnsiNote(ColoursToANSI('  @CUsage:'))
+  AnsiNote(ColoursToANSI('    @wMake a quaff (hp or mana) alias, have it Send to: Execute and'))
+  AnsiNote(ColoursToANSI('    @wjust add autoshanty in separate line. Alias sing can be used'))
+  AnsiNote(ColoursToANSI('    @wto easily turn on and off the singing - without the need to'))
+  AnsiNote(ColoursToANSI('    @wedit the alias.'))
+  AnsiNote()
+  AnsiNote(ColoursToANSI('@C{-o @Y---------------------------------------------------------------- @Co-}@w'))
+end
+
+function shanty_reload()
+  AnsiNote(shanty_logo..ColoursToANSI('@G Reloading @gin @C0.2 @gsec...'))
+  if GetAlphaOption("script_prefix") == "" then SetAlphaOption("script_prefix", "\\\\\\") end
+  Execute(GetAlphaOption("script_prefix").."DoAfterSpecial(0.2, \"ReloadPlugin('"..GetPluginID().."')\", sendto.script)")
+end
+
+function OnPluginInstall()
+  if activesinging then
+    AnsiNote(shanty_logo..ColoursToANSI('@w type @Yshanty help @wfor command and usage reference. @Yautoshanty @wis @W[ @GON @W]'))
+  else
+    AnsiNote(shanty_logo..ColoursToANSI('@w type @Yshanty help @wfor command and usage reference. @Yautoshanty @wis @W[ @ROFF @W]'))
+  end
+end
+
+]]>
+</script>
+</muclient>
