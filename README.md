@@ -3,6 +3,7 @@ A MUSHclient plugins for the Aardwolf MUD made by BlueFeather, themed for o-}Hoo
 
 * <a href="#hook-shanty">Hook Shanty</a> (v1.7): contains a collection of sea shanties to make your puping sessions bearable - either by outputting to room channel (say) or to area channel (yell)
 * <a href="#hook-spellup">Hook Spellup</a> (v1.3): tries to keep you spelled up while honoring different states (afk, sleeping, resting, combat)
+* <a href="Links/LINKS.md">Links</a>: a collection of various, potentially useful, links to aard resources
 
 *****
 
