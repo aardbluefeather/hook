@@ -44,6 +44,10 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
 
 <script>
 <![CDATA[
+-----------------
+-- Default values
+-----------------
+require "gmcphelper"
 env_active = false
 
 -----------------
@@ -51,13 +55,14 @@ env_active = false
 -----------------
 function OnPluginBroadcast(msg, id, name, text)
   if env_active then
-    if text == 'room.area' then
-      Note('room.area received! We switched the area!!')
-      Note('This is what we know about current area:')
-    elseif text == 'ok_you_can_go_now' then
-      Note('mapper said that it is ok to move now!')
-    else
-      Note('msg: ['..msg..'], id: ['..id..'], name: ['..name..'], text: ['..text..']')
+    if name == 'GMCP_handler' then
+      if string.match(text,'char.') then
+        Note(text..' received! This is what we have about it:')
+        Note(gmcp(text))
+      elseif string.match(text,'room.') then
+        Note(text..' received! This is what we have about it:')
+        Note(gmcp(text))
+      end
     end
   end
 end
