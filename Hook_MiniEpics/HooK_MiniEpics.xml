@@ -58,8 +58,10 @@ end
 function toggle_debug()
   if env_active then
     env_active = false
+    Note('MiniEpics debug: [OFF]')
   else
     env_active = true
+    Note('MiniEpics debug: [ON]')
   end
 end
 
