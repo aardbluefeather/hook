@@ -51,7 +51,14 @@ env_active = false
 -----------------
 function OnPluginBroadcast(msg, id, name, text)
   if env_active then
-    Note('msg: ['..msg..'], id: ['..id..'], name: ['..name..'], text: ['..text..']')
+    if text == 'room.area' then
+      Note('room.area received! We switched the area!!')
+      Note('This is what we know about current area:')
+    elseif text == 'ok_you_can_go_now' then
+      Note('mapper said that it is ok to move now!')
+    else
+      Note('msg: ['..msg..'], id: ['..id..'], name: ['..name..'], text: ['..text..']')
+    end
   end
 end
 
