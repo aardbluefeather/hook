@@ -54,14 +54,31 @@ env_active = false
 -- Zone awareness
 -----------------
 function OnPluginBroadcast(msg, id, name, text)
+  if text == 'char.base' then
+    Send_GMCP_Packet('request area')
+    Send_GMCP_Packet('request room')
+    Note('We have reconnected, issue area/room request')
+  end
   if env_active then
+    if name ~= 'Aardwolf_Soundpack' and name ~= 'Galabans_Moons' and name ~= 'Aardwolf_GMCP_Mapper' and name ~= 'WinkleGold_Search_Destroy' and name ~= 'WinkleGold_Mapper_Extender' then
+      Note('msg: '..msg..', id: '..id..', name: '..name..', text: '..text) -- Ignore known broadcasts, give unknown ones
+    end
     if name == 'GMCP_handler' then
-      if string.match(text,'char.') then
-        Note(text..' received! This is what we have about it:')
-        Note(dump(gmcp(text)))
-      elseif string.match(text,'room.') then
-        Note(text..' received! This is what we have about it:')
-        Note(dump(gmcp(text)))
+      -- if string.match(text,'char.') then
+      --   Note(text..' received! This is what we have about it:')
+      --   Note(dump(gmcp(text)))
+      -- elseif string.match(text,'room.') then
+      --   Note(text..' received! This is what we have about it:')
+      --   Note(dump(gmcp(text)))
+      -- end
+      if text == 'room.area' then
+        if gmcp('room.area.id') == 'titan' then
+          Note('We have entered titan area')
+        elseif gmcp('room.area.id') == 'terra' then
+          Note('We have entered terra area')
+        else
+          Note('We have exited titan/terra area')
+        end
       end
     end
   end
