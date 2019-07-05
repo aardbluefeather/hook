@@ -13,7 +13,7 @@
     <name>Spellup</name>
     <author>BlueFeather</author>
     <description>Tries to keep you spelled up while honoring different states (afk, sleeping, resting, combat, note).</description>
-    <id>23832d1089f727f5f34abad8</id>
+    <id>f717f9bf18936c8f9b6d2f1e</id>
     <download>https://raw.githubusercontent.com/aardbluefeather/hook/master/pkg/spellup.zip</download>
     <installpath>0</installpath>
   </plugin>
