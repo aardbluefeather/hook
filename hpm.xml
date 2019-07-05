@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+ <pluginsListing>
+  <plugin>
+    <name>Shanty</name>
+    <author>BlueFeather</author>
+    <description>Contains a collection of sea shanties to make your puping sessions bearable - either by outputting to room channel (say) or to area channel (yell).</description>
+    <id>2e1106c89712487faa051a1d</id>
+    <download>https://raw.githubusercontent.com/aardbluefeather/hook/master/pkg/shanty.zip</download>
+    <installpath>0</installpath>
+  </plugin>
+
+  <plugin>
+    <name>Spellup</name>
+    <author>BlueFeather</author>
+    <description>Tries to keep you spelled up while honoring different states (afk, sleeping, resting, combat, note).</description>
+    <id>23832d1089f727f5f34abad8</id>
+    <download>https://raw.githubusercontent.com/aardbluefeather/hook/master/pkg/spellup.zip</download>
+    <installpath>0</installpath>
+  </plugin>
+
+  <plugin>
+    <name>MiniEpics</name>
+    <author>BlueFeather</author>
+    <id>2a0221da142c2505699c5adb</id>
+    <description>A collection of triggers for use in Titan and Terra miniepics - to make life there easier.</description>
+    <download>https://raw.githubusercontent.com/aardbluefeather/hook/master/pkg/miniepics.zip</download>
+    <installpath>0</installpath>
+  </plugin>
+
+ </pluginsListing>

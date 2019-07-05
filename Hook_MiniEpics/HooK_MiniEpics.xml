@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE muclient>
+<muclient>
+<plugin
+   name="HooK_MiniEpics"
+   author="BlueFeather"
+   id="2a0221da142c2505699c5adb"
+   language="Lua"
+   purpose="Mini epic (Titan/Terra) triggers and reports"
+   save_state="y"
+   date_written="2019-06-26 21:47:01"
+   requires="5.06"
+   version="1.0"
+   >
+<description trim="y">
+<![CDATA[
+A collection of triggers for use in Titan and Terra miniepics - to make life there easier.
+]]>
+</description>
+
+</plugin>
+
+
+<!--  Get our standard constants -->
+
+<include name="constants.lua"/>
+
+<!--  Triggers  -->
+
+<triggers>
+  <trigger match="* grabs a nearby shield to defend himself!"                       enabled="y" keep_evaluating="y" sequence="99"><send>echo shield up!</send></trigger>
+  <trigger match="* wears a Mighty Shield as a shield."                             enabled="y" keep_evaluating="y" sequence="99"><send>echo shield up!</send></trigger>
+  <trigger match="With awesome force * cleaves *'s shield in half!"                 enabled="y" keep_evaluating="y" sequence="99"><send>echo shield down!</send></trigger>
+  <trigger match="* quaffs a potion of Sanctuary."                                  enabled="y" keep_evaluating="y" sequence="99"><send>echo sanc up!</send></trigger>
+  <trigger match="* is surrounded by a shimmering white aura of divine protection." enabled="y" keep_evaluating="y" sequence="99"><send>echo sanc up!</send></trigger>
+  <trigger match="The white aura around *'s body vanishes."                         enabled="y" keep_evaluating="y" sequence="99"><send>echo dispel!</send></trigger>
+</triggers>
+
+<!--  Plugin help  -->
+
+<aliases>
+  <alias script="OnHelp" match="HooK_MiniEpics:help" enabled="y"></alias>
+</aliases>
+
+<script>
+<![CDATA[
+function OnHelp ()
+  world.Note (world.GetPluginInfo (world.GetPluginID (), 3))
+end
+]]>
+</script> 
+
+</muclient>
