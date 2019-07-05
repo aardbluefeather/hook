@@ -39,14 +39,30 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
 <!--  Plugin help  -->
 
 <aliases>
-  <alias script="OnHelp" match="HooK_MiniEpics:help" enabled="y"></alias>
+  <alias script="toggle_debug" match="miniepics_debug" enabled="y"></alias>
 </aliases>
 
 <script>
 <![CDATA[
-function OnHelp ()
-  world.Note (world.GetPluginInfo (world.GetPluginID (), 3))
+env_active = false
+
+-----------------
+-- Zone awareness
+-----------------
+function OnPluginBroadcast(msg, id, name, text)
+  if env_active then
+    Note('msg: ['..msg..'], id: ['..id..'], name: ['..name..'], text: ['..text..']')
+  end
 end
+
+function toggle_debug()
+  if env_active then
+    env_active = false
+  else
+    env_active = true
+  end
+end
+
 ]]>
 </script> 
 
