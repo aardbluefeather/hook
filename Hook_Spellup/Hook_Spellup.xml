@@ -81,7 +81,7 @@ Hook_Spellup v1.3 loaded.
   <trigger match="You feel weaker."                                                            enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
   <trigger match="You feel solid again."                                                       enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
   <trigger match="You feel weaker as you question your faith."                                 enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel the loss of your champion strength."                                enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
+  <trigger match="You feel the loss of your champion's strength."                              enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
   <trigger match="You feel more vulnerable to electricity."                                    enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
   <trigger match="You feel more vulnerable to disease."                                        enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
   <trigger match="You feel more vulnerable to cold."                                           enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
