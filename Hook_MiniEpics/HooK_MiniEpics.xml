@@ -10,7 +10,7 @@
    save_state="y"
    date_written="2019-06-26 21:47:01"
    requires="5.06"
-   version="0.1"
+   version="0.2"
    >
 <description trim="y">
 <![CDATA[
@@ -28,13 +28,31 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
 <!--  Triggers  -->
 
 <triggers>
+  <!-- Boss hits -->
+  <trigger match="^(.+) looks very uncomfortable\.$"                               regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'y','Curse')</send></trigger>
+  <trigger match="^You ridicule (.+) about \w+ childhood\.$"                       regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Ego Whip')</send></trigger>
+  <trigger match="^(.+?)'?s? ego is crushed by \w+!$"                              regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Ego Whip')</send></trigger>
+  <trigger match="^(.+) looks very ill\.$"                                         regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Poison')</send></trigger>
+  <trigger match="^You mark (.+) with a Rune of IX!$"                              regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'y','Rune of IX')</send></trigger>
+  <trigger match="^(.+?)'?s? armor softens\.$"                                     regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Soften')</send></trigger>
+  <trigger match="^(.+) looks tired and weak\.$"                                   regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Weaken')</send></trigger>
+  <trigger match="^(.+) looks unwell\.$"                                           regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Disease')</send></trigger>
+  <trigger match="^(.+?)'?s? flesh is ripped from \w+ body\.$"                     regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Raw Flesh')</send></trigger>
+  <trigger match="^(.+) looks unwell\.$"                                           regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Disease')</send></trigger>
+  <trigger match="^(.+) appears to falter. Your victim is in serious trouble!$"    regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Hydra Blood')</send></trigger>
+  <trigger match="^(.+) appears pale and weak\.$"                                  regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Hydra Blood')</send></trigger>
+  <trigger match="^Your acidic venom burns away (.+?)'?s? armor\.$"                regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Raven Scourge')</send></trigger>
+  <trigger match="^(.+) appears much weaker and extremely vulnerable\.$"           regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Green Death')</send></trigger>
+  <trigger match="^(.+) appears extremely vulnerable as the mist surrounds \w+\.$" regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Green Death')</send></trigger>
+  <trigger match="^(.+) turns pale and appears weakened\.$"                        regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'y','Kobold Spray')</send></trigger>
+  <trigger match="^(.+?)'?s? body starts to weaken\.$"                             regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Hex of Entropy')</send></trigger>
   <!-- TITAN -->
-  <trigger match="* wears a Mighty Shield as a shield."             script="titan_shy" enabled="n" group="me_titan" keep_evaluating="y" sequence="99"></trigger>
-  <trigger match="With awesome force * cleaves *'s shield in half!" script="titan_shn" enabled="n" group="me_titan" keep_evaluating="y" sequence="99"></trigger>
-  <trigger match="* quaffs a potion of Sanctuary."                  script="titan_say" enabled="n" group="me_titan" keep_evaluating="y" sequence="99"></trigger>
-  <trigger match="The white aura around *'s body vanishes."         script="titan_san" enabled="n" group="me_titan" keep_evaluating="y" sequence="99"></trigger>
+  <trigger match="^(.+) wears a Mighty Shield as a shield\.$"                      regexp="y" enabled="n" group="me_titan" keep_evaluating="y" sequence="99" script="titan_shy"></trigger>
+  <trigger match="^With awesome force (.+) cleaves (.+?)'?s? shield in half!$"     regexp="y" enabled="n" group="me_titan" keep_evaluating="y" sequence="99" script="titan_shn"></trigger>
+  <trigger match="^(.+) quaffs a potion of Sanctuary.$"                            regexp="y" enabled="n" group="me_titan" keep_evaluating="y" sequence="99" script="titan_say"></trigger>
+  <trigger match="^The white aura around (.+?)'?s? body vanishes.$"                regexp="y" enabled="n" group="me_titan" keep_evaluating="y" sequence="99" script="titan_san"></trigger>
   <!-- TERRA -->
-  <trigger match="The white aura around *'s body vanishes."         script="" enabled="n" group="me_terra" keep_evaluating="y" sequence="99"></trigger>
+  <trigger match="^The white aura around (.+?)'?s? body vanishes.$"                regexp="y" enabled="n" group="me_terra" keep_evaluating="y" sequence="99" script=""></trigger>
 </triggers>
 
 <!--  Aliases  -->
@@ -79,7 +97,8 @@ end
 require "gmcphelper"
 require "serialize"
 dofile(GetPluginInfo(GetPluginID(),20).."aardwolf_colors.lua")
-local logo = ColoursToANSI('@Co-}@YHooK@C{-o  @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C1')
+local logo = ColoursToANSI('@Co-}@YHooK@C{-o  @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C2')
+local logoshort = ColoursToANSI('@Y[@x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs@Y]')
 local env_active = gb(GetVariable('env_active')) or true
 local env_debug = gb(GetVariable('env_debug')) or false
 local env_area = GetVariable('env_area') or 'out'
@@ -96,12 +115,13 @@ function miniepics_toggle()
     SaveState()
     EnableTriggerGroup('me_titan', false) debugout('me_titan OFF')
     EnableTriggerGroup('me_terra', false) debugout('me_terra OFF')
+    EnableTriggerGroup('me_bhits', false) debugout('me_bhits OFF')
     AnsiNote(logo..ColoursToANSI('@w miniepic triggers turned @ROFF'))
   else
     env_active = true
     SaveState()
-    if gmcp('room.info.zone') == 'titan' then EnableTriggerGroup('me_titan', true) debugout('me_titan ON') end
-    if gmcp('room.info.zone') == 'terra' then EnableTriggerGroup('me_terra', true) debugout('me_terra ON') end
+    if gmcp('room.info.zone') == 'titan' then EnableTriggerGroup('me_titan', true) EnableTriggerGroup('me_bhits', true) debugout('me_titan ON') debugout('me_bhits ON') end
+    if gmcp('room.info.zone') == 'terra' then EnableTriggerGroup('me_terra', true) EnableTriggerGroup('me_bhits', true) debugout('me_terra ON') debugout('me_bhits ON') end
     AnsiNote(logo..ColoursToANSI('@w miniepic triggers turned @GON'))
   end
 end
@@ -126,6 +146,7 @@ end
 
 function miniepics_test()
   EnableTriggerGroup('me_titan', true)
+  EnableTriggerGroup('me_bhits', true)
   SendNoEcho("echo With awesome force Pumpkin cleaves Grakkr's shield in half!")
   SendNoEcho("echo Grakkr wears a Mighty Shield as a shield.")
   SendNoEcho("echo Grakkr quaffs a potion of Sanctuary.")
@@ -134,10 +155,11 @@ end
 
 function miniepics_test2()
   EnableTriggerGroup('me_titan', true)
-  -- SendNoEcho("echo With awesome force Pumpkin cleaves Grakkr's shield in half!")
-  -- SendNoEcho("echo Grakkr wears a Mighty Shield as a shield.")
-  -- SendNoEcho("echo Grakkr quaffs a potion of Sanctuary.")
-  SendNoEcho("echo The white aura around Grakkr's body vanishes.")
+  EnableTriggerGroup('me_bhits', true)
+  SendNoEcho("echo Grakkr looks very uncomfortable.")
+  SendNoEcho("echo Grakkr's ego is crushed by Tymme!")
+  SendNoEcho("echo Grakkr looks tired and weak.")
+  SendNoEcho("echo Grakkr appears extremely vulnerable as the mist surrounds it.")
 end
 
 --------------------
@@ -147,7 +169,9 @@ function titan_shy(name, line, wc)
   debugout('titan_shy function called, env_active is '..sb(env_active))
   if env_active then
     line = ' @R'..sanitize(wc[1])..' @Co-}@YShielded!@C{-o'
-    if env_chan == 'echo' then AnsiNote(logo..ColoursToANSI(line)) end
+    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
     if env_chan == 'gt' then SendNoEcho('gt'..line) end
     if env_chan == 'say' then SendNoEcho('say'..line) end
   end
@@ -156,8 +180,10 @@ end
 function titan_shn(name, line, wc)
   debugout('titan_shn function called, env_active is '..sb(env_active))
   if env_active then
-    line = ' @R'..sanitize(wc[2])..' @Co-}@GShield destroyed!@C{-o @Yby '..sanitize(wc[1])
-    if env_chan == 'echo' then AnsiNote(logo..ColoursToANSI(line)) end
+    line = ' @G'..sanitize(wc[2])..' @Co-}@GShield destroyed!@C{-o @Yby '..sanitize(wc[1])
+    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
     if env_chan == 'gt' then SendNoEcho('gt'..line) end
     if env_chan == 'say' then SendNoEcho('say'..line) end
   end
@@ -167,7 +193,9 @@ function titan_say(name, line, wc)
   debugout('titan_say function called, env_active is '..sb(env_active))
   if env_active then
     line = ' @R'..sanitize(wc[1]).." @Co-}@WSanc'ed!@C{-o"
-    if env_chan == 'echo' then AnsiNote(logo..ColoursToANSI(line)) end
+    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
     if env_chan == 'gt' then SendNoEcho('gt'..line) end
     if env_chan == 'say' then SendNoEcho('say'..line) end
   end
@@ -178,12 +206,26 @@ function titan_san(name, line, wc)
   if env_active then
     debugout('titan_san wc[1] is: '..wc[1]..' and it returns '..sb(indexof(bosstitan, wc[1])))
     if indexof(bosstitan, wc[1]) then
-      line = ' @R'..sanitize(wc[1])..' @Co-}@GDispelled sanctuary!@C{-o'
-      if env_chan == 'echo' then AnsiNote(logo..ColoursToANSI(line)) end
+      line = ' @G'..sanitize(wc[1])..' @Co-}@GDispelled sanctuary!@C{-o'
+      if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+      if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+      if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
       if env_chan == 'gt' then SendNoEcho('gt'..line) end
       if env_chan == 'say' then SendNoEcho('say'..line) end
     end
   end
+end
+
+function hit_warning(boss, always, spell)
+  debugout('hit_warning function called, boss: '..boss..', always: '..always..', spell: '..spell)
+    if env_active then
+      if indexof(bosstitan, boss) or indexof(bossterra, boss) or boss:lower() == 'someone' then
+        line = ' @Y'..sanitize(boss)..' @Co-}@W'..spell..'@C{-o @Yhit!'
+        if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+        if env_chan == 'gt' then SendNoEcho('gt'..line..'@Y') end
+        if env_chan == 'say' then SendNoEcho('say'..line..'@C') end
+      end
+    end
 end
 
 -----------------
@@ -216,10 +258,14 @@ function OnPluginBroadcast(msg, id, name, text)
               AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.'))
               EnableTriggerGroup('me_terra', false)
               debugout('me_terra trigger group OFF.')
+              EnableTriggerGroup('me_bhits', false)
+              debugout('me_bhits trigger group OFF.')
             end
             env_area = 'titan'
             EnableTriggerGroup('me_titan', true)
             debugout('me_titan trigger group ON.')
+            EnableTriggerGroup('me_bhits', true)
+            debugout('me_bhits trigger group ON.')
             SaveState()
             AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are ['..env_triggers..'@W]'))
           end
@@ -229,11 +275,15 @@ function OnPluginBroadcast(msg, id, name, text)
               AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.'))
               EnableTriggerGroup('me_titan', false)
               debugout('me_titan trigger group OFF.')
+              EnableTriggerGroup('me_bhits', false)
+              debugout('me_bhits trigger group OFF.')
             end
             env_area = 'terra'
             EnableTriggerGroup('me_terra', true)
             debugout('me_terra trigger group ON.')
-            SaveState()
+            EnableTriggerGroup('me_bhits', true)
+            debugout('me_bhits trigger group ON.')
+          SaveState()
             AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are ['..env_triggers..'@W]'))
           end
         else
@@ -244,6 +294,8 @@ function OnPluginBroadcast(msg, id, name, text)
             debugout('me_titan trigger group OFF.')
             EnableTriggerGroup('me_terra', false)
             debugout('me_terra trigger group OFF.')
+            EnableTriggerGroup('me_bhits', false)
+            debugout('me_bhits trigger group OFF.')
             SaveState()
           end
         end
