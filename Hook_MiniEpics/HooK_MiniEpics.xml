@@ -47,6 +47,18 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
   <trigger match="^(.+) turns pale and appears weakened\.$"                        regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'y','Kobold Spray')</send></trigger>
   <trigger match="^(.+?)'?s? body starts to weaken\.$"                             regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Hex of Entropy')</send></trigger>
   <!-- TITAN -->
+  <!-- Boss start and boss end -->
+  <trigger match="^Gjaka gives Gjaka's Burden to (.+)\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>end_boss('titan','Gjaka',"%1")</send></trigger>
+  <trigger match="^Grakkr gives Grakkr's Leadership to (.+)\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>end_boss('titan','Grakkr',"%1")</send></trigger>
+  <trigger match="^Morgak gives Morgak's Silence to (.+)\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>end_boss('titan','Morgak',"%1")</send></trigger>
+  <trigger match="^Orzbuk's .+ gives Orzbuk's Vision to (.+)\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>end_boss('titan','Orzbuk',"%1")</send></trigger>
+  <trigger match="^Lugthurg gives Lugthurg's Bones to (.+)\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>end_boss('titan','Lugthurg',"%1")</send></trigger>
+  <trigger match="^Once the Titan General is slain, Salkin quickly leads you back to the secret junction\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>end_boss('titan','Rograg','tank')</send></trigger>
+  <!-- Placeholders, need to get correct strings -->
+  <trigger match="^Rograg gives the tank something (.+)\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>end_boss('titan','Rograg',"%1")</send></trigger>
+  <trigger match="^Hej gives Hej's something to (.+)\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>end_boss('titan','Hej',"%1")</send></trigger>
+  <trigger match="^Durthar gives Durthar's something to (.+)\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>end_boss('titan','Durthar',"%1")</send></trigger>
+  <!-- Shield and sanc, common Boss behaviour -->
   <trigger match="^(.+) wears a Mighty Shield as a shield\.$"                      regexp="y" enabled="n" group="me_titan" keep_evaluating="y" sequence="99" script="titan_shy"></trigger>
   <trigger match="^With awesome force (.+) cleaves (.+?)'?s? shield in half!$"     regexp="y" enabled="n" group="me_titan" keep_evaluating="y" sequence="99" script="titan_shn"></trigger>
   <trigger match="^(.+) quaffs a potion of Sanctuary.$"                            regexp="y" enabled="n" group="me_titan" keep_evaluating="y" sequence="99" script="titan_say"></trigger>
@@ -78,6 +90,7 @@ function gb(s) if s == 'true' then return true else return false end end
 function PadString(str, len, char) if char == nil then char = ' ' end return string.rep(char, len - #str) .. str end
 function sanitize(s) return s:gsub('[%p%c]','') end
 function indexof(t, s) for k, v in ipairs(t) do if v == s then return true end end return false end
+function AnsiNoteN(n, s) for i = n, 1, -1 do AnsiNote(s) end end
 function dump(o)
   if type(o) == 'table' then
      local s = '{ '
@@ -169,9 +182,7 @@ function titan_shy(name, line, wc)
   debugout('titan_shy function called, env_active is '..sb(env_active))
   if env_active then
     line = ' @R'..sanitize(wc[1])..' @Co-}@YShielded!@C{-o'
-    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
-    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
-    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+    if env_chan == 'echo' then AnsiNoteN(3, logoshort..ColoursToANSI(line)) end
     if env_chan == 'gt' then SendNoEcho('gt'..line) end
     if env_chan == 'say' then SendNoEcho('say'..line) end
   end
@@ -181,9 +192,7 @@ function titan_shn(name, line, wc)
   debugout('titan_shn function called, env_active is '..sb(env_active))
   if env_active then
     line = ' @G'..sanitize(wc[2])..' @Co-}@GShield destroyed!@C{-o @Yby '..sanitize(wc[1])
-    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
-    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
-    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+    if env_chan == 'echo' then AnsiNoteN(3, logoshort..ColoursToANSI(line)) end
     if env_chan == 'gt' then SendNoEcho('gt'..line) end
     if env_chan == 'say' then SendNoEcho('say'..line) end
   end
@@ -193,9 +202,7 @@ function titan_say(name, line, wc)
   debugout('titan_say function called, env_active is '..sb(env_active))
   if env_active then
     line = ' @R'..sanitize(wc[1]).." @Co-}@WSanc'ed!@C{-o"
-    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
-    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
-    if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+    if env_chan == 'echo' then AnsiNoteN(3, logoshort..ColoursToANSI(line)) end
     if env_chan == 'gt' then SendNoEcho('gt'..line) end
     if env_chan == 'say' then SendNoEcho('say'..line) end
   end
@@ -207,9 +214,7 @@ function titan_san(name, line, wc)
     debugout('titan_san wc[1] is: '..wc[1]..' and it returns '..sb(indexof(bosstitan, wc[1])))
     if indexof(bosstitan, wc[1]) then
       line = ' @G'..sanitize(wc[1])..' @Co-}@GDispelled sanctuary!@C{-o'
-      if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
-      if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
-      if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(line)) end
+      if env_chan == 'echo' then AnsiNoteN(3, logoshort..ColoursToANSI(line)) end
       if env_chan == 'gt' then SendNoEcho('gt'..line) end
       if env_chan == 'say' then SendNoEcho('say'..line) end
     end
@@ -251,7 +256,6 @@ function OnPluginBroadcast(msg, id, name, text)
       -- end
       if text == 'room.area' then
         debugout('room.area broadcast heard.')
-        if env_active then env_triggers = '@GON' else env_triggers = '@ROFF' end
         if gmcp('room.area.id') == 'titan' then
           if env_area ~= 'titan' then
             if env_area == 'terra' then
@@ -267,7 +271,7 @@ function OnPluginBroadcast(msg, id, name, text)
             EnableTriggerGroup('me_bhits', true)
             debugout('me_bhits trigger group ON.')
             SaveState()
-            AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are ['..env_triggers..'@W]'))
+            AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are [@GON@W]'))
           end
         elseif gmcp('room.area.id') == 'terra' then
           if env_area ~= 'terra' then
@@ -284,7 +288,7 @@ function OnPluginBroadcast(msg, id, name, text)
             EnableTriggerGroup('me_bhits', true)
             debugout('me_bhits trigger group ON.')
           SaveState()
-            AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are ['..env_triggers..'@W]'))
+            AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are [@GON@W]'))
           end
         else
           if env_area == 'titan' or env_area == 'terra' then
@@ -300,6 +304,13 @@ function OnPluginBroadcast(msg, id, name, text)
           end
         end
       end
+      -- if env_area == 'titan' then
+      --   if text == 'room.info' then
+      --     if gmpc('room.info.num') == 'neki broj' then
+      --       Note('Daj informaciju o kojem se bossu radi')
+      --     end
+      --   end
+      -- end
     end
   end
 end

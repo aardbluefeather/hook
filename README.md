@@ -1,9 +1,27 @@
 # Hook of Aardwolf
 A MUSHclient plugins for the Aardwolf MUD made by BlueFeather, themed for o-}HooK{-o clan.
 
+## Installation
+Get the [`Hook_Plugin_Manager_v1.33.zip`][package_install] and unzip it in your MUSHclient root folder. It contains two files: zip.dll (MUSHclient/ folder) and Hook_Plugin_Manager.xml (MUSHclient/worlds/plugins/ folder). Add Hook_Plugin_Manager to your MUSHclient plugins, use ***"hpm help"*** alias to get the list of commands.
+
+## Folders
+* <a href="#hook-miniepics">Hook MiniEpics</a> (v0.2): a collection of triggers for use in Titan and Terra miniepics - to make life there easier
 * <a href="#hook-shanty">Hook Shanty</a> (v1.7): contains a collection of sea shanties to make your puping sessions bearable - either by outputting to room channel (say) or to area channel (yell)
 * <a href="#hook-spellup">Hook Spellup</a> (v1.3): tries to keep you spelled up while honoring different states (afk, sleeping, resting, combat)
 * <a href="Links/LINKS.md">Links</a>: a collection of various, potentially useful, links to aard resources
+* <a href="pkg/">pkg</a>: package folder, this is where the plugin manager downloads updates from
+
+## Files
+* **Hook_Plugin_Manager.xml**: this file is used when plugin manager checks if it needs to self-update
+* **hpm.xml**: this file contains references to the plugins it manages
+* **util_win.ps1**: a small utility for windows powershell that helps with file packing (for use in $profile)
+
+*****
+
+## Hook MiniEpics
+A collection of triggers for use in Titan and Terra miniepics - to make life there easier.
+
+For a summary of the most recent changes, please see [`MiniEpics CHANGELOG`][changelog_miniepics].
 
 *****
 
@@ -46,5 +64,7 @@ To not use bag1 or bag2, set it to zero: "ss bag1 0"
 
 <!-- links -->
 
+  [changelog_miniepics]: https://github.com/aardbluefeather/hook/blob/master/Hook_MiniEpics/CHANGELOG.md
   [changelog_shanty]: https://github.com/aardbluefeather/hook/blob/master/Hook_Shanty/CHANGELOG.md
   [changelog_spellup]: https://github.com/aardbluefeather/hook/blob/master/Hook_Spellup/CHANGELOG.md
+  [package_install]: https://github.com/aardbluefeather/hook/raw/master/pkg/Hook_Plugin_Manager_v1.33.zip
