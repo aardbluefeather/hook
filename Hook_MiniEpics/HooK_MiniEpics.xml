@@ -233,6 +233,9 @@ function hit_warning(boss, always, spell)
     end
 end
 
+function end_boss(area, boss, player)
+end
+
 -----------------
 -- Zone awareness
 -----------------
@@ -246,7 +249,9 @@ function OnPluginBroadcast(msg, id, name, text)
     -- if name ~= 'Aardwolf_Soundpack' and name ~= 'Galabans_Moons' and name ~= 'Aardwolf_GMCP_Mapper' and name ~= 'WinkleGold_Search_Destroy' and name ~= 'WinkleGold_Mapper_Extender' then
     --   debugout('msg: '..msg..', id: '..id..', name: '..name..', text: '..text) -- Ignore known broadcasts, give unknown ones
     -- end
+    debugout(name..': '..text)
     if name == 'GMCP_handler' then
+      -- Figuring out what gmcp contains for char.* and for room.*
       -- if string.match(text,'char.') then
       --   debugout(text..' received! This is what we have about it:')
       --   debugout(dump(gmcp(text)))
@@ -304,13 +309,13 @@ function OnPluginBroadcast(msg, id, name, text)
           end
         end
       end
-      -- if env_area == 'titan' then
-      --   if text == 'room.info' then
-      --     if gmpc('room.info.num') == 'neki broj' then
-      --       Note('Daj informaciju o kojem se bossu radi')
-      --     end
-      --   end
-      -- end
+      if env_area == 'titan' then
+        if text == 'room.info' then
+          if gmcp('room.info.num') == 'neki broj' then
+            Note('Daj informaciju o kojem se bossu radi')
+          end
+        end
+      end
     end
   end
 end
