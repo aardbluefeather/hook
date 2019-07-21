@@ -48,3 +48,15 @@ Function touch {
     New-Item -ItemType File -Path $file
   }
 }
+
+Function sync {
+  if($null -eq $args[0] -Or $null -eq $args[1]) {
+    throw "Usage: sync source destination."
+  }
+  # Remove trailing backslash
+  $src = $args[0] -replace '\\$'
+  $src = '"' + $src + '"'
+  $dest = $args[1] -replace '\\$'
+  $dest = '"' + $dest + '"'
+  Robocopy $src $dest /MIR /FFT /Z /XA:H /W:5
+}
