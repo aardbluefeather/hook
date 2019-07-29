@@ -10,7 +10,7 @@
    save_state="y"
    date_written="2019-06-26 21:47:01"
    requires="5.06"
-   version="0.3"
+   version="0.4"
    >
 <description trim="y">
 <![CDATA[
@@ -48,6 +48,8 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
   <trigger match="^(.+?)'?s? body starts to weaken\.$"                             regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Hex of Entropy')</send></trigger>
   <!-- TITAN -->
   <!-- Boss start and boss end -->
+  <trigger match="^You receive Rune of Passage from Salkin\.$"            regexp="y" enabled="n" group="me_titan" sequence="99" script="start_area"></trigger>
+  <trigger match="^You receive Salkin's Reward from Salkin\.$"            regexp="y" enabled="n" group="me_titan" sequence="99" script="end_area"></trigger>
   <trigger match="^.+ takes a deep breath, then leaves down a passage\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>EnableTriggerGroup('me_start', true)</send></trigger>
 
   <trigger match="^At the edge of the Abyss$" regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Durthar')</send></trigger>
@@ -139,7 +141,7 @@ function ClockFormat(h,m,s) return '@W'..string.format('%02.f', h)..'@wh @W'..st
 require "gmcphelper"
 require "serialize"
 dofile(GetPluginInfo(GetPluginID(),20).."aardwolf_colors.lua")
-local logo = ColoursToANSI('@Co-}@YHooK@C{-o  @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C3')
+local logo = ColoursToANSI('@Co-}@YHooK@C{-o  @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C4')
 local logoshort = ColoursToANSI('@Y[@x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs@Y]')
 local env_active = gb(GetVariable('env_active')) or true
 local env_debug = gb(GetVariable('env_debug')) or false
@@ -208,13 +210,13 @@ function miniepics_toggle()
     EnableTriggerGroup('me_titan', false) debugout('me_titan OFF')
     EnableTriggerGroup('me_terra', false) debugout('me_terra OFF')
     EnableTriggerGroup('me_bhits', false) debugout('me_bhits OFF')
-    AnsiNote(logo..ColoursToANSI('@w miniepic triggers turned @ROFF'))
+    noteout('@w miniepic triggers turned @ROFF')
   else
     env_active = true
     SaveState()
     if gmcp('room.info.zone') == 'titan' then EnableTriggerGroup('me_titan', true) EnableTriggerGroup('me_bhits', true) debugout('me_titan ON') debugout('me_bhits ON') end
     if gmcp('room.info.zone') == 'terra' then EnableTriggerGroup('me_terra', true) EnableTriggerGroup('me_bhits', true) debugout('me_terra ON') debugout('me_bhits ON') end
-    AnsiNote(logo..ColoursToANSI('@w miniepic triggers turned @GON'))
+    noteout('@w miniepic triggers turned @GON')
   end
 end
 
@@ -222,18 +224,18 @@ function miniepics_debug()
   if env_debug then
     env_debug = false
     SaveState()
-    AnsiNote(logo..ColoursToANSI('@w miniepic debugging turned @ROFF'))
+    noteout('@w miniepic debugging turned @ROFF')
   else
     env_debug = true
     SaveState()
-    AnsiNote(logo..ColoursToANSI('@w miniepic debugging turned @GON'))
+    noteout('@w miniepic debugging turned @GON')
   end
 end
 
 function miniepics_channel(name, line, wc)
   env_chan = wc[1]
   SaveState()
-  AnsiNote(logo..ColoursToANSI('@w miniepic channel set to @Y'..env_chan))
+  noteout('@w miniepic channel set to @Y'..env_chan)
 end
 
 function miniepics_test()
@@ -255,12 +257,22 @@ function miniepics_test2()
 end
 
 function miniepics_test3()
+  env_area = 'titan'
   EnableTriggerGroup('me_titan', true)
+  SendNoEcho("echo You receive Rune of Passage from Salkin.")
   SendNoEcho("echo Tester takes a deep breath, then leaves down a passage.")
   SendNoEcho("echo Shattered reality")
-  DoAfter(3, "echo Durthar gives Durthar's Speed to RedFeather.")
-  DoAfter(8, "echo RedFeather gives Gjaka's Burden to Salkin.")
-  DoAfter(9, "echo Gjaka gives Gjaka's Burden to RedFeather.")
+  DoAfterSpecial(2, "miniepics_explain()", 12)
+  DoAfter(3, "echo RedFeather gives Gjaka's Burden to Salkin.")
+  DoAfter(4, "echo Tester takes a deep breath, then leaves down a passage.")
+  DoAfter(5, "echo A crystal chamber")
+  DoAfterSpecial(6, "miniepics_explain()", 12)
+  DoAfter(7, "echo Lugthurg gives Lugthurg's Bones to BlueFeather.")
+  DoAfter(8, "echo Tester takes a deep breath, then leaves down a passage.")
+  DoAfter(9, "echo A ritual chamber")
+  DoAfterSpecial(10, "miniepics_explain()", 12)
+  DoAfter(11, "echo Once the Titan General is slain, Salkin quickly leads you back to the secret junction.")
+  DoAfter(12, "echo You receive Salkin's Reward from Salkin.")
 end
 --------------------
 -- Trigger functions
@@ -318,45 +330,37 @@ function end_boss(area, boss, player)
     noteout("@C An error occured - we expected "..bossinfo[env_boss].name.." but got "..boss.." instead. Why?")
     Note()
   end
-  time_duration_boss = os.time() - time_start_boss
-  line = ' @Co-}@Y'..bossinfo[env_boss].name..'@C{-o  @GFINISHED: '..SecondsToClock(time_duration_boss)
+  time_duration = os.time() - time_start_boss
+  line = ' @Co-}@Y'..bossinfo[env_boss].name..'@C{-o  @GFINISHED: '..SecondsToClock(time_duration)
   if player then line = line..'@w ... @C'..bossinfo[env_boss].item..'@w given to @Y'..player end
   reportout(1, line)
   EnableTriggerGroup(bossinfo[env_boss].name, false)
   env_boss = false
   EnableAlias('miniexplain', false)
-  if env_bosscount == 3 then
-    line = ' @Co-}@Y'..area..'@C{-o  @GFINISHED: '..SecondsToClock(time_duration_area)
-    reportout(1, line)
-    env_bosscount = false
-  end
 end
 
 function start_boss(area, boss)
-  if sanitize(string.lower(boss)) ~= env_boss then
-    if not env_bosscount then
-      env_bosscount = 1
-      time_start_area = os.time()
-    elseif env_bosscount > 3 then
-      Note()
-      noteout("@C An error occured - we counted more than 3 bosses! Please check what happened.")
-      noteout("@C An error occured - we counted more than 3 bosses! Please check what happened.")
-      noteout("@C An error occured - we counted more than 3 bosses! Please check what happened.")
-      Note()
-    else
-      env_bosscount = env_bosscount + 1
-    end
-  end
+  if sanitize(string.lower(boss)) ~= env_boss then env_bosscount = env_bosscount + 1 end
   time_start_boss = os.time()
   env_boss = sanitize(string.lower(boss))
   EnableTriggerGroup('me_start', false)
   EnableTriggerGroup(bossinfo[env_boss].name, true)
-  line = ' @Co-}@Y'..bossinfo[env_boss].name..'@C{-o @w- '..bossinfo[env_boss].short
+  line = ' @Co-}@Y'..bossinfo[env_boss].name..'@C{-o @w[@Y'..env_bosscount..'@w] '..bossinfo[env_boss].short
   reportout(1,line)
   EnableAlias('miniexplain', true)
-  Note()
   noteout("@C You can type now '@Yminiexplain@C' to explain "..bossinfo[env_boss].name.." to newbies in the group.")
-  Note()
+end
+
+function start_area()
+  env_bosscount = 0
+  time_start_area = os.time()
+end
+
+function end_area()
+  time_duration = os.time() - time_start_area
+  line = ' @Co-}@Y'..env_area:upper()..'@C{-o  @GFINISHED: '..SecondsToClock(time_duration)
+  reportout(1, line)
+  env_bosscount = false
 end
 
 -----------------
@@ -387,7 +391,7 @@ function OnPluginBroadcast(msg, id, name, text)
         if gmcp('room.area.id') == 'titan' then
           if env_area ~= 'titan' then
             if env_area == 'terra' then
-              AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.'))
+              noteout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.')
               EnableTriggerGroup('me_terra', false)
               debugout('me_terra trigger group OFF.')
               EnableTriggerGroup('me_bhits', false)
@@ -399,12 +403,12 @@ function OnPluginBroadcast(msg, id, name, text)
             EnableTriggerGroup('me_bhits', true)
             debugout('me_bhits trigger group ON.')
             SaveState()
-            AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are [@GON@W]'))
+            noteout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are [@GON@W]')
           end
         elseif gmcp('room.area.id') == 'terra' then
           if env_area ~= 'terra' then
             if env_area == 'titan' then
-              AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.'))
+              noteout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.')
               EnableTriggerGroup('me_titan', false)
               debugout('me_titan trigger group OFF.')
               EnableTriggerGroup('me_bhits', false)
@@ -416,11 +420,11 @@ function OnPluginBroadcast(msg, id, name, text)
             EnableTriggerGroup('me_bhits', true)
             debugout('me_bhits trigger group ON.')
           SaveState()
-            AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are [@GON@W]'))
+            noteout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are [@GON@W]')
           end
         else
           if env_area == 'titan' or env_area == 'terra' then
-            AnsiNote(logo..ColoursToANSI(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.'))
+            noteout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.')
             env_area = 'out'
             EnableTriggerGroup('me_titan', false)
             debugout('me_titan trigger group OFF.')
@@ -429,13 +433,6 @@ function OnPluginBroadcast(msg, id, name, text)
             EnableTriggerGroup('me_bhits', false)
             debugout('me_bhits trigger group OFF.')
             SaveState()
-          end
-        end
-      end
-      if env_area == 'titan' then
-        if text == 'room.info' then
-          if gmcp('room.info.num') == 'neki broj' then
-            Note('Daj informaciju o kojem se bossu radi')
           end
         end
       end

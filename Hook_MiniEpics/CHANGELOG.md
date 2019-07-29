@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this plugin will be documented in this file.
 
+## v0.4 - 2019-07-30
+- fixed bugs with timers
+- added boss explainers
+
 ## v0.3 - 2019-07-29
 - added boss timers
 - added run timer
