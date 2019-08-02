@@ -10,7 +10,7 @@
    save_state="y"
    date_written="2019-06-26 21:47:01"
    requires="5.06"
-   version="0.4"
+   version="0.5"
    >
 <description trim="y">
 <![CDATA[
@@ -94,6 +94,7 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
 <aliases>
   <alias match="^miniepi?c?s?$"               regexp="y" enabled="y" script="miniepics_toggle"></alias>
   <alias match="^miniepi?c?s? (gt|say|echo)$" regexp="y" enabled="y" script="miniepics_channel"></alias>
+  <alias match="^miniepi?c?s? commlog$"       regexp="y" enabled="y" script="miniepics_commlog"></alias>
   <alias match="^miniepi?c?s? help$"          regexp="y" enabled="y" script="miniepics_help"></alias>
   <alias match="^miniepi?c?s? test$"          regexp="y" enabled="y" script="miniepics_test"></alias>
   <alias match="^miniepi?c?s? test2$"         regexp="y" enabled="y" script="miniepics_test2"></alias>
@@ -141,10 +142,11 @@ function ClockFormat(h,m,s) return '@W'..string.format('%02.f', h)..'@wh @W'..st
 require "gmcphelper"
 require "serialize"
 dofile(GetPluginInfo(GetPluginID(),20).."aardwolf_colors.lua")
-local logo = ColoursToANSI('@Co-}@YHooK@C{-o  @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C4')
+local logo = ColoursToANSI('@Co-}@YHooK@C{-o  @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C5')
 local logoshort = ColoursToANSI('@Y[@x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs@Y]')
 local env_active = gb(GetVariable('env_active')) or true
 local env_debug = gb(GetVariable('env_debug')) or false
+local env_commlog = gb(GetVariable('env_commlog')) or false
 local env_area = GetVariable('env_area') or 'out'
 local env_chan = GetVariable('env_chan') or 'echo'
 local bosstitan = { "Grakkr", "Hej", "Orzbuk", "Lugthurg", "Gjaka", "Morgak", "Durthar", "Rograg" }
@@ -220,6 +222,18 @@ function miniepics_toggle()
   end
 end
 
+function miniepics_commlog()
+  if env_commlog then
+    env_commlog = false
+    SaveState()
+    noteout('@w communication log integration is [@ROFF@w]')
+  else
+    env_commlog = true
+    SaveState()
+    noteout('@w communication log integration is [@GON@w]')
+  end
+end
+
 function miniepics_debug()
   if env_debug then
     env_debug = false
@@ -281,7 +295,7 @@ function titan_shy(name, line, wc)
   debugout('titan_shy function called, env_active is '..sb(env_active))
   if env_active then
     line = ' @R'..sanitize(wc[1])..' @Co-}@YShielded!@C{-o'
-    reportout(3, line)
+    reportout(line)
   end
 end
 
@@ -289,7 +303,7 @@ function titan_shn(name, line, wc)
   debugout('titan_shn function called, env_active is '..sb(env_active))
   if env_active then
     line = ' @G'..sanitize(wc[2])..' @Co-}@GShield destroyed!@C{-o @Yby '..sanitize(wc[1])
-    reportout(3, line)
+    reportout(line)
   end
 end
 
@@ -297,7 +311,7 @@ function titan_say(name, line, wc)
   debugout('titan_say function called, env_active is '..sb(env_active))
   if env_active then
     line = ' @R'..sanitize(wc[1]).." @Co-}@WSanc'ed!@C{-o"
-    reportout(3, line)
+    reportout(line)
   end
 end
 
@@ -307,7 +321,7 @@ function titan_san(name, line, wc)
     debugout('titan_san wc[1] is: '..wc[1]..' and it returns '..sb(indexof(bosstitan, wc[1])))
     if indexof(bosstitan, wc[1]) then
       line = ' @G'..sanitize(wc[1])..' @Co-}@GDispelled sanctuary!@C{-o'
-      reportout(3, line)
+      reportout(line)
     end
   end
 end
@@ -317,24 +331,21 @@ function hit_warning(boss, always, spell)
     if env_active then
       if indexof(bosstitan, boss) or indexof(bossterra, boss) or boss:lower() == 'someone' then
         line = ' @Y'..sanitize(boss)..' @Co-}@W'..spell..'@C{-o @Yhit!'
-        reportout(1, line)
+        reportout(line)
       end
     end
 end
 
 function end_boss(area, boss, player)
   if sanitize(string.lower(boss)) ~= env_boss then
-    Note()
     noteout("@C An error occured - we expected "..bossinfo[env_boss].name.." but got "..boss.." instead. Why?")
-    noteout("@C An error occured - we expected "..bossinfo[env_boss].name.." but got "..boss.." instead. Why?")
-    noteout("@C An error occured - we expected "..bossinfo[env_boss].name.." but got "..boss.." instead. Why?")
-    Note()
   end
   time_duration = os.time() - time_start_boss
   line = ' @Co-}@Y'..bossinfo[env_boss].name..'@C{-o  @GFINISHED: '..SecondsToClock(time_duration)
   if player then line = line..'@w ... @C'..bossinfo[env_boss].item..'@w given to @Y'..player end
-  reportout(1, line)
+  reportout(line)
   EnableTriggerGroup(bossinfo[env_boss].name, false)
+  noteout("@C "..bossinfo[env_boss].name.." is dead, turning off '@Yminiexplain@C' alias.")
   env_boss = false
   EnableAlias('miniexplain', false)
 end
@@ -346,7 +357,7 @@ function start_boss(area, boss)
   EnableTriggerGroup('me_start', false)
   EnableTriggerGroup(bossinfo[env_boss].name, true)
   line = ' @Co-}@Y'..bossinfo[env_boss].name..'@C{-o @w[@Y'..env_bosscount..'@w] '..bossinfo[env_boss].short
-  reportout(1,line)
+  reportout(line)
   EnableAlias('miniexplain', true)
   noteout("@C You can type now '@Yminiexplain@C' to explain "..bossinfo[env_boss].name.." to newbies in the group.")
 end
@@ -359,7 +370,7 @@ end
 function end_area()
   time_duration = os.time() - time_start_area
   line = ' @Co-}@Y'..env_area:upper()..'@C{-o  @GFINISHED: '..SecondsToClock(time_duration)
-  reportout(1, line)
+  reportout(line)
   env_bosscount = false
 end
 
@@ -447,23 +458,40 @@ function miniepics_help()
   AnsiNote(ColoursToANSI('@C{-o @Y----------------@C[  ')..logo..ColoursToANSI('  @C]@Y---------------- @Co-}@w'))
   AnsiNote()
   AnsiNote(ColoursToANSI('  @CCommands:'))
-  AnsiNote(ColoursToANSI('    @Yminiepics        @w- switch plugin ON / OFF'))
-  AnsiNote(ColoursToANSI('    @Yminiepics help   @w- this screen'))
-  AnsiNote(ColoursToANSI('    @Yminiepics gt     @w- set output channel to group tell'))
-  AnsiNote(ColoursToANSI('    @Yminiepics say    @w- set output channel to say'))
-  AnsiNote(ColoursToANSI('    @Yminiepics echo   @w- set output channel to local echo'))
-  -- AnsiNote(ColoursToANSI('    @Yminiepics debug  @w- toggle debug info'))
+  if env_active then
+    AnsiNote(ColoursToANSI('    @Yminiepics         @w- switch plugin ON / OFF       Now: [@G ON @w]'))
+  else
+    AnsiNote(ColoursToANSI('    @Yminiepics         @w- switch plugin ON / OFF       Now: [@R OFF @w]'))
+  end
+  if env_commlog then
+    AnsiNote(ColoursToANSI('    @Yminiepics commlog @w- redirect echo to commlog     Now: [@G ON @w]'))
+  else
+    AnsiNote(ColoursToANSI('    @Yminiepics commlog @w- redirect echo to commlog     Now: [@R OFF @w]'))
+  end
+  AnsiNote(ColoursToANSI('    @Yminiepics help    @w- this screen'))
+  if env_commlog then
+    AnsiNote(ColoursToANSI('    @Yminiepics gt      @w- set output channel to group tell & commlog'))
+    AnsiNote(ColoursToANSI('    @Yminiepics say     @w- set output channel to say & commlog'))
+    AnsiNote(ColoursToANSI('    @Yminiepics echo    @w- set output channel to local echo & commlog'))
+  else
+    AnsiNote(ColoursToANSI('    @Yminiepics gt      @w- set output channel to group tell'))
+    AnsiNote(ColoursToANSI('    @Yminiepics say     @w- set output channel to say'))
+    AnsiNote(ColoursToANSI('    @Yminiepics echo    @w- set output channel to local echo'))
+  end
+  -- AnsiNote(ColoursToANSI('    @Yminiepics debug   @w- toggle debug info'))
   AnsiNote()
   AnsiNote(ColoursToANSI('  @CUsage:'))
   AnsiNote(ColoursToANSI('    @wPlugin will autodetect your current zone and activate'))
-  AnsiNote(ColoursToANSI('    @wrequired triggers that report to group channel.'))
+  AnsiNote(ColoursToANSI('    @wrequired triggers that report to [@Y '..env_chan..' @w] channel.'))
+  AnsiNote(ColoursToANSI('    @wKeep in mind that echo & commlog are instant, while say & gt'))
+  AnsiNote(ColoursToANSI('    @ware prone to lag (especially if you spam commands).'))
   AnsiNote()
   AnsiNote(ColoursToANSI('@C{-o @Y---------------------------------------------------------------- @Co-}@w'))
 end
 
 function miniepics_explain()
   if env_boss and env_active then
-    reportout(1, ' @W'..bossinfo[env_boss].long)
+    reportout(' @W'..bossinfo[env_boss].long)
   end
 end
 
@@ -474,14 +502,18 @@ function debugout(e)
 end
 
 function noteout(e)
-  AnsiNote(logoshort..ColoursToANSI(e))
+  if env_commlog then 
+    CallPlugin("b555825a4a5700c35fa80780", "storeFromOutside", AnsiToColours(logoshort)..e, 1, true)
+  else
+    AnsiNote(logoshort..ColoursToANSI(e))
+  end
 end
 
-function reportout(i,e)
-  -- i = importance level, higher = more important
-  if env_chan == 'echo' then AnsiNoteN(i, logoshort..ColoursToANSI(e)) end
-  if env_chan == 'gt' then SendNoEcho('gt'..e..'$C') end
-  if env_chan == 'say' then SendNoEcho('say'..e..'$C') end
+function reportout(e)
+  if env_commlog then CallPlugin("b555825a4a5700c35fa80780", "storeFromOutside", AnsiToColours(logoshort)..e, 1, true) end
+  if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(e)) end
+  if env_chan == 'gt' then SendNoEcho('gt'..e..'@Y') end
+  if env_chan == 'say' then SendNoEcho('say'..e..'@C') end
 end
 
 function OnPluginInstall()
@@ -494,6 +526,7 @@ function OnPluginSaveState()
   SetVariable('env_chan', env_chan)
   SetVariable('env_active', sb(env_active))
   SetVariable('env_debug', sb(env_debug))
+  SetVariable('env_commlog', sb(env_commlog))
 end
 
 

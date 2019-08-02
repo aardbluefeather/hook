@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this plugin will be documented in this file.
 
+## v0.5 - 2019-08-02
+- added communication log integration
+- help file changes
+
 ## v0.4 - 2019-07-30
 - fixed bugs with timers
 - added boss explainers
