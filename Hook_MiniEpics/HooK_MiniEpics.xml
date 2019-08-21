@@ -10,7 +10,7 @@
    save_state="y"
    date_written="2019-06-26 21:47:01"
    requires="5.06"
-   version="0.5"
+   version="0.6"
    >
 <description trim="y">
 <![CDATA[
@@ -25,8 +25,7 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
 
 <include name="constants.lua"/>
 
-<!--  Triggers  -->
-
+<!--  #region Triggers  -->
 <triggers>
   <!-- Boss hits -->
   <trigger match="^(.+) looks very uncomfortable\.$"                               regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'y','Curse')</send></trigger>
@@ -47,11 +46,11 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
   <trigger match="^(.+) turns pale and appears weakened\.$"                        regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'y','Kobold Spray')</send></trigger>
   <trigger match="^(.+?)'?s? body starts to weaken\.$"                             regexp="y" enabled="n" group="me_bhits" sequence="99" send_to="12"><send>hit_warning("%1",'n','Hex of Entropy')</send></trigger>
   <!-- TITAN -->
-  <!-- Boss start and boss end -->
+  <!-- Run start and end -->
   <trigger match="^You receive Rune of Passage from Salkin\.$"            regexp="y" enabled="n" group="me_titan" sequence="99" script="start_area"></trigger>
   <trigger match="^You receive Salkin's Reward from Salkin\.$"            regexp="y" enabled="n" group="me_titan" sequence="99" script="end_area"></trigger>
   <trigger match="^.+ takes a deep breath, then leaves down a passage\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>EnableTriggerGroup('me_start', true)</send></trigger>
-
+  <!-- Boss start -->
   <trigger match="^At the edge of the Abyss$" regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Durthar')</send></trigger>
   <trigger match="^Shattered reality$"        regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Gjaka')</send></trigger>
   <trigger match="^A small chamber$"          regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Grakkr')</send></trigger>
@@ -60,7 +59,7 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
   <trigger match="^A large arena$"            regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Morgak')</send></trigger>
   <trigger match="^A crystal seal$"           regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Orzbuk')</send></trigger>
   <trigger match="^A ritual chamber$"         regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Rograg')</send></trigger>
-  
+  <!-- Boss end v1 -->
   <trigger match="^Durthar gives Durthar's Speed to (.+)\.$"     regexp="y" enabled="n" group="Durthar"  sequence="99" send_to="12"><send>end_boss('titan','Durthar',"%1")</send></trigger>
   <trigger match="^Gjaka gives Gjaka's Burden to (.+)\.$"        regexp="y" enabled="n" group="Gjaka"    sequence="99" send_to="12"><send>end_boss('titan','Gjaka',"%1")</send></trigger>
   <trigger match="^Grakkr gives Grakkr's Leadership to (.+)\.$"  regexp="y" enabled="n" group="Grakkr"   sequence="99" send_to="12"><send>end_boss('titan','Grakkr',"%1")</send></trigger>
@@ -68,48 +67,75 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
   <trigger match="^Lugthurg gives Lugthurg's Bones to (.+)\.$"   regexp="y" enabled="n" group="Lugthurg" sequence="99" send_to="12"><send>end_boss('titan','Lugthurg',"%1")</send></trigger>
   <trigger match="^Morgak gives Morgak's Silence to (.+)\.$"     regexp="y" enabled="n" group="Morgak"   sequence="99" send_to="12"><send>end_boss('titan','Morgak',"%1")</send></trigger>
   <trigger match="^Orzbuk's .+ gives Orzbuk's Vision to (.+)\.$" regexp="y" enabled="n" group="Orzbuk"   sequence="99" send_to="12"><send>end_boss('titan','Orzbuk',"%1")</send></trigger>
-  <trigger match="^Rograg gives you Rograg's Greaves\.$"         regexp="y" enabled="n" group="Rograg"   sequence="99" send_to="12"><send>end_boss('titan','Rograg','me')</send></trigger>
   <trigger match="^Once the Titan General is slain, Salkin quickly leads you back to the secret junction\.$" regexp="y" enabled="n" group="Rograg" sequence="99" send_to="12"><send>end_boss('titan','Rograg','tank')</send></trigger>
-
-  <trigger match="^.+ gives Durthar's Speed to Salkin\.$"        regexp="y" enabled="n" group="Durthar"  sequence="99" send_to="12"><send>end_boss('titan','Durthar')</send></trigger>
-  <trigger match="^.+ gives Gjaka's Burden to Salkin\.$"         regexp="y" enabled="n" group="Gjaka"    sequence="99" send_to="12"><send>end_boss('titan','Gjaka')</send></trigger>
-  <trigger match="^.+ gives Grakkr's Leadership to Salkin\.$"    regexp="y" enabled="n" group="Grakkr"   sequence="99" send_to="12"><send>end_boss('titan','Grakkr')</send></trigger>
-  <trigger match="^.+ gives Hej's Compendium to Salkin\.$"       regexp="y" enabled="n" group="Hej"      sequence="99" send_to="12"><send>end_boss('titan','Hej')</send></trigger>
-  <trigger match="^.+ gives Lugthurg's Bones to Salkin\.$"       regexp="y" enabled="n" group="Lugthurg" sequence="99" send_to="12"><send>end_boss('titan','Lugthurg')</send></trigger>
-  <trigger match="^.+ gives Morgak's Silence to Salkin\.$"       regexp="y" enabled="n" group="Morgak"   sequence="99" send_to="12"><send>end_boss('titan','Morgak')</send></trigger>
-  <trigger match="^.+ gives Orzbuk's Vision to Salkin\.$"        regexp="y" enabled="n" group="Orzbuk"   sequence="99" send_to="12"><send>end_boss('titan','Orzbuk')</send></trigger>
-  <trigger match="^.+ gives Rograg's Greaves to Salkin\.$"       regexp="y" enabled="n" group="Rograg"   sequence="99" send_to="12"><send>end_boss('titan','Rograg')</send></trigger>
-
+  <!-- Boss end v2 -->
+  <trigger match="^You (?:receive|get) Durthar's Speed from .+$"     regexp="y" enabled="n" group="Durthar"  sequence="99" send_to="12"><send>end_boss('titan','Durthar',"me")</send></trigger>
+  <trigger match="^You (?:receive|get) Gjaka's Burden from .+$"      regexp="y" enabled="n" group="Gjaka"    sequence="99" send_to="12"><send>end_boss('titan','Gjaka',"me")</send></trigger>
+  <trigger match="^You (?:receive|get) Grakkr's Leadership from .+$" regexp="y" enabled="n" group="Grakkr"   sequence="99" send_to="12"><send>end_boss('titan','Grakkr',"me")</send></trigger>
+  <trigger match="^You (?:receive|get) Hej's Compendium from .+$"    regexp="y" enabled="n" group="Hej"      sequence="99" send_to="12"><send>end_boss('titan','Hej',"me")</send></trigger>
+  <trigger match="^You (?:receive|get) Lugthurg's Bones from .+$"    regexp="y" enabled="n" group="Lugthurg" sequence="99" send_to="12"><send>end_boss('titan','Lugthurg',"me")</send></trigger>
+  <trigger match="^You (?:receive|get) Morgak's Silence from .+$"    regexp="y" enabled="n" group="Morgak"   sequence="99" send_to="12"><send>end_boss('titan','Morgak',"me")</send></trigger>
+  <trigger match="^You (?:receive|get) Orzbuk's Vision from .+$"     regexp="y" enabled="n" group="Orzbuk"   sequence="99" send_to="12"><send>end_boss('titan','Orzbuk',"me")</send></trigger>
+  <trigger match="^You (?:receive|get) Rograg's Greaves from .+$"    regexp="y" enabled="n" group="Rograg"   sequence="99" send_to="12"><send>end_boss('titan','Rograg','me')</send></trigger>
+  <!-- Boss end v3 -->
+  <trigger match="^.+ gives you Durthar's Speed\.$"     regexp="y" enabled="n" group="Durthar"  sequence="99" send_to="12"><send>end_boss('titan','Durthar',"me")</send></trigger>
+  <trigger match="^.+ gives you Gjaka's Burden\.$"      regexp="y" enabled="n" group="Gjaka"    sequence="99" send_to="12"><send>end_boss('titan','Gjaka',"me")</send></trigger>
+  <trigger match="^.+ gives you Grakkr's Leadership\.$" regexp="y" enabled="n" group="Grakkr"   sequence="99" send_to="12"><send>end_boss('titan','Grakkr',"me")</send></trigger>
+  <trigger match="^.+ gives you Hej's Compendium\.$"    regexp="y" enabled="n" group="Hej"      sequence="99" send_to="12"><send>end_boss('titan','Hej',"me")</send></trigger>
+  <trigger match="^.+ gives you Lugthurg's Bones\.$"    regexp="y" enabled="n" group="Lugthurg" sequence="99" send_to="12"><send>end_boss('titan','Lugthurg',"me")</send></trigger>
+  <trigger match="^.+ gives you Morgak's Silence\.$"    regexp="y" enabled="n" group="Morgak"   sequence="99" send_to="12"><send>end_boss('titan','Morgak',"me")</send></trigger>
+  <trigger match="^.+ gives you Orzbuk's Vision\.$"     regexp="y" enabled="n" group="Orzbuk"   sequence="99" send_to="12"><send>end_boss('titan','Orzbuk',"me")</send></trigger>
+  <trigger match="^.+ gives you Rograg's Greaves\.$"    regexp="y" enabled="n" group="Rograg"   sequence="99" send_to="12"><send>end_boss('titan','Rograg','me')</send></trigger>
+  <!-- Boss end v4 - fallback -->
+  <trigger match="^.+ gives? Durthar's Speed to Salkin\.$"        regexp="y" enabled="n" group="Durthar"  sequence="99" send_to="12"><send>end_boss('titan','Durthar')</send></trigger>
+  <trigger match="^.+ gives? Gjaka's Burden to Salkin\.$"         regexp="y" enabled="n" group="Gjaka"    sequence="99" send_to="12"><send>end_boss('titan','Gjaka')</send></trigger>
+  <trigger match="^.+ gives? Grakkr's Leadership to Salkin\.$"    regexp="y" enabled="n" group="Grakkr"   sequence="99" send_to="12"><send>end_boss('titan','Grakkr')</send></trigger>
+  <trigger match="^.+ gives? Hej's Compendium to Salkin\.$"       regexp="y" enabled="n" group="Hej"      sequence="99" send_to="12"><send>end_boss('titan','Hej')</send></trigger>
+  <trigger match="^.+ gives? Lugthurg's Bones to Salkin\.$"       regexp="y" enabled="n" group="Lugthurg" sequence="99" send_to="12"><send>end_boss('titan','Lugthurg')</send></trigger>
+  <trigger match="^.+ gives? Morgak's Silence to Salkin\.$"       regexp="y" enabled="n" group="Morgak"   sequence="99" send_to="12"><send>end_boss('titan','Morgak')</send></trigger>
+  <trigger match="^.+ gives? Orzbuk's Vision to Salkin\.$"        regexp="y" enabled="n" group="Orzbuk"   sequence="99" send_to="12"><send>end_boss('titan','Orzbuk')</send></trigger>
+  <trigger match="^.+ gives? Rograg's Greaves to Salkin\.$"       regexp="y" enabled="n" group="Rograg"   sequence="99" send_to="12"><send>end_boss('titan','Rograg')</send></trigger>
   <!-- Shield and sanc, common Boss behaviour -->
   <trigger match="^(.+) wears a Mighty Shield as a shield\.$"                      regexp="y" enabled="n" group="me_titan" keep_evaluating="y" sequence="99" script="titan_shy"></trigger>
   <trigger match="^With awesome force (.+) cleaves (.+?)'?s? shield in half!$"     regexp="y" enabled="n" group="me_titan" keep_evaluating="y" sequence="99" script="titan_shn"></trigger>
   <trigger match="^(.+) quaffs a potion of Sanctuary.$"                            regexp="y" enabled="n" group="me_titan" keep_evaluating="y" sequence="99" script="titan_say"></trigger>
   <trigger match="^The white aura around (.+?)'?s? body vanishes.$"                regexp="y" enabled="n" group="me_titan" keep_evaluating="y" sequence="99" script="titan_san"></trigger>
+  <!-- TITAN - Boss specific announcements -->
+  <!-- Durthar -->
+  <trigger match="^Durthar exclaims 'Enough! Begone, little ants!'$"                   regexp="y" enabled="n" group="Durthar" keep_evaluating="n" sequence="99" send_to="12"><send>fn_durthar('trans')</send></trigger>
+  <trigger match="^Durthar fades into existence\.$"                                    regexp="y" enabled="n" group="Durthar" keep_evaluating="n" sequence="99" send_to="12"><send>fn_durthar('rep')</send></trigger>
+  <trigger match="^.+ A Titan treads the knife's edge between Reality and the Void\.$" regexp="y" enabled="n" group="Durthar" keep_evaluating="n" sequence="99" send_to="12"><send>fn_durthar('rep')</send></trigger>
+  <trigger match="^.+ Durthar is fighting .+$"                                         regexp="y" enabled="n" group="Durthar" keep_evaluating="n" sequence="99" send_to="12"><send>fn_durthar('rep')</send></trigger>
+
   <!-- TERRA -->
   <trigger match="^The white aura around (.+?)'?s? body vanishes.$"                regexp="y" enabled="n" group="me_terra" keep_evaluating="y" sequence="99" script=""></trigger>
 </triggers>
+<!--  #endregion  -->
 
-<!--  Aliases  -->
-
+<!--  #region Aliases  -->
 <aliases>
-  <alias match="^miniepi?c?s?$"               regexp="y" enabled="y" script="miniepics_toggle"></alias>
-  <alias match="^miniepi?c?s? (gt|say|echo)$" regexp="y" enabled="y" script="miniepics_channel"></alias>
-  <alias match="^miniepi?c?s? commlog$"       regexp="y" enabled="y" script="miniepics_commlog"></alias>
-  <alias match="^miniepi?c?s? help$"          regexp="y" enabled="y" script="miniepics_help"></alias>
-  <alias match="^miniepi?c?s? test$"          regexp="y" enabled="y" script="miniepics_test"></alias>
-  <alias match="^miniepi?c?s? test2$"         regexp="y" enabled="y" script="miniepics_test2"></alias>
-  <alias match="^miniepi?c?s? test3$"         regexp="y" enabled="y" script="miniepics_test3"></alias>
-  <alias match="^miniepi?c?s? debug$"         regexp="y" enabled="y" script="miniepics_debug"></alias>
-  <alias match="^miniexplain$" name="miniexplain" regexp="y" enabled="n" script="miniepics_explain"></alias>
+  <alias match="^miniepi?c?s?$"               regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_toggle"></alias>
+  <alias match="^miniepi?c?s? (gt|say|echo)$" regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_channel"></alias>
+  <alias match="^miniepi?c?s? v(1|2|3|4)$"    regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_verbosity"></alias>
+  <alias match="^miniepi?c?s? commlog$"       regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_commlog"></alias>
+  <alias match="^miniepi?c?s? help$"          regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_help"></alias>
+  <alias match="^miniepi?c?s? test$"          regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test"></alias>
+  <alias match="^miniepi?c?s? test2$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test2"></alias>
+  <alias match="^miniepi?c?s? test3$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test3"></alias>
+  <alias match="^miniepi?c?s? debug$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_debug"></alias>
+  <alias match="^miniepi?c?s?.+$"             regexp="y" keep_evaluating="n" sequence="99" enabled="y" script="miniepics_badcommand"></alias>
+  <alias match="^miniexplain$"    name="miniexplain" regexp="y" enabled="n" script="miniepics_explain"></alias>
+  <alias match="^rep$"            group="Durthar" regexp="y" enabled="n" send_to="12"><send>durthar('report')</send></alias>
 </aliases>
+<!--  #endregion  -->
 
 <!--  Script  -->
 
 <script>
 <![CDATA[
--------------------
--- Helper functions
--------------------
+---------------------------
+-- #region Helper functions
+---------------------------
 function sb(b) if b then return 'true' else return 'false' end end
 function gb(s) if s == 'true' then return true else return false end end
 function PadString(str, len, char) if char == nil then char = ' ' end return string.rep(char, len - #str) .. str end
@@ -135,20 +161,22 @@ function SecondsToClock(s)
   end
 end
 function ClockFormat(h,m,s) return '@W'..string.format('%02.f', h)..'@wh @W'..string.format('%02.f', m)..'@wm @W'..string.format('%02.f', s)..'@ws' end
-
------------------
--- Default values
------------------
+-- #endregion
+-------------------------
+-- #region Default values
+-------------------------
 require "gmcphelper"
 require "serialize"
 dofile(GetPluginInfo(GetPluginID(),20).."aardwolf_colors.lua")
-local logo = ColoursToANSI('@Co-}@YHooK@C{-o  @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C5')
+local logo = ColoursToANSI('@Co-}@YHooK@C{-o  @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C6')
 local logoshort = ColoursToANSI('@Y[@x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs@Y]')
 local env_active = gb(GetVariable('env_active')) or true
 local env_debug = gb(GetVariable('env_debug')) or false
 local env_commlog = gb(GetVariable('env_commlog')) or false
 local env_area = GetVariable('env_area') or 'out'
 local env_chan = GetVariable('env_chan') or 'echo'
+local env_verbosity = tonumber(GetVariable('env_verbosity')) or 3
+local env_verbosity_name = {'crucial', 'important', 'interesting', 'spammy'}
 local bosstitan = { "Grakkr", "Hej", "Orzbuk", "Lugthurg", "Gjaka", "Morgak", "Durthar", "Rograg" }
 local bossterra = { "Kjare", "Skeligh", "Yqath", "Vortath", "Salkin", "Nysil", "Yrelth", "Ksajus" }
 local bossinfo = {
@@ -201,10 +229,10 @@ local bossinfo = {
     long = "Main tank will 'nod salkin' to get transferred to Rograg. The rest will kill the guardians until they find red color of the altar. Then the titan in the center will be pushed to that altar, killed, and the heart sacrificed. Another titan will appear in his place (not in center). Keep killing the titans and sacrificing the heart."
   }
 }
-
-------------------
--- Miniepics alias
-------------------
+-- #endregion
+--------------------------
+-- #region Miniepics alias
+--------------------------
 function miniepics_toggle()
   if env_active then
     env_active = false
@@ -212,13 +240,13 @@ function miniepics_toggle()
     EnableTriggerGroup('me_titan', false) debugout('me_titan OFF')
     EnableTriggerGroup('me_terra', false) debugout('me_terra OFF')
     EnableTriggerGroup('me_bhits', false) debugout('me_bhits OFF')
-    noteout('@w miniepic triggers turned @ROFF')
+    writeout('@w miniepic triggers turned @ROFF', 1, 'echo')
   else
     env_active = true
     SaveState()
     if gmcp('room.info.zone') == 'titan' then EnableTriggerGroup('me_titan', true) EnableTriggerGroup('me_bhits', true) debugout('me_titan ON') debugout('me_bhits ON') end
     if gmcp('room.info.zone') == 'terra' then EnableTriggerGroup('me_terra', true) EnableTriggerGroup('me_bhits', true) debugout('me_terra ON') debugout('me_bhits ON') end
-    noteout('@w miniepic triggers turned @GON')
+    writeout('@w miniepic triggers turned @GON', 1, 'echo')
   end
 end
 
@@ -226,30 +254,36 @@ function miniepics_commlog()
   if env_commlog then
     env_commlog = false
     SaveState()
-    noteout('@w communication log integration is [@ROFF@w]')
+    writeout('@w communication log integration is [@ROFF@w]', 1, 'echo')
   else
     env_commlog = true
     SaveState()
-    noteout('@w communication log integration is [@GON@w]')
+    writeout('@w communication log integration is [@GON@w]', 1, 'echo')
   end
+end
+
+function miniepics_verbosity(name, line, wc)
+  env_verbosity = tonumber(wc[1])
+  SaveState()
+  writeout('@w miniepic verbosity level set to [@Y'..env_verbosity..'@w] - @Y'..env_verbosity_name[env_verbosity], 1, 'echo')
 end
 
 function miniepics_debug()
   if env_debug then
     env_debug = false
     SaveState()
-    noteout('@w miniepic debugging turned @ROFF')
+    writeout('@w miniepic debugging turned @ROFF', 1, 'echo')
   else
     env_debug = true
     SaveState()
-    noteout('@w miniepic debugging turned @GON')
+    writeout('@w miniepic debugging turned @GON', 1, 'echo')
   end
 end
 
 function miniepics_channel(name, line, wc)
   env_chan = wc[1]
   SaveState()
-  noteout('@w miniepic channel set to @Y'..env_chan)
+  writeout('@w miniepic channel set to @Y'..env_chan, 1, 'echo')
 end
 
 function miniepics_test()
@@ -288,14 +322,15 @@ function miniepics_test3()
   DoAfter(11, "echo Once the Titan General is slain, Salkin quickly leads you back to the secret junction.")
   DoAfter(12, "echo You receive Salkin's Reward from Salkin.")
 end
---------------------
--- Trigger functions
---------------------
+-- #endregion
+----------------------------
+-- #region Trigger functions
+----------------------------
 function titan_shy(name, line, wc)
   debugout('titan_shy function called, env_active is '..sb(env_active))
   if env_active then
     line = ' @R'..sanitize(wc[1])..' @Co-}@YShielded!@C{-o'
-    reportout(line)
+    writeout(line, 2)
   end
 end
 
@@ -303,7 +338,7 @@ function titan_shn(name, line, wc)
   debugout('titan_shn function called, env_active is '..sb(env_active))
   if env_active then
     line = ' @G'..sanitize(wc[2])..' @Co-}@GShield destroyed!@C{-o @Yby '..sanitize(wc[1])
-    reportout(line)
+    writeout(line, 3)
   end
 end
 
@@ -311,7 +346,7 @@ function titan_say(name, line, wc)
   debugout('titan_say function called, env_active is '..sb(env_active))
   if env_active then
     line = ' @R'..sanitize(wc[1]).." @Co-}@WSanc'ed!@C{-o"
-    reportout(line)
+    writeout(line, 2)
   end
 end
 
@@ -321,7 +356,7 @@ function titan_san(name, line, wc)
     debugout('titan_san wc[1] is: '..wc[1]..' and it returns '..sb(indexof(bosstitan, wc[1])))
     if indexof(bosstitan, wc[1]) then
       line = ' @G'..sanitize(wc[1])..' @Co-}@GDispelled sanctuary!@C{-o'
-      reportout(line)
+      writeout(line, 3)
     end
   end
 end
@@ -331,52 +366,107 @@ function hit_warning(boss, always, spell)
     if env_active then
       if indexof(bosstitan, boss) or indexof(bossterra, boss) or boss:lower() == 'someone' then
         line = ' @Y'..sanitize(boss)..' @Co-}@W'..spell..'@C{-o @Yhit!'
-        reportout(line)
+        writeout(line, 3)
       end
     end
 end
 
 function end_boss(area, boss, player)
-  if sanitize(string.lower(boss)) ~= env_boss then
-    noteout("@C An error occured - we expected "..bossinfo[env_boss].name.." but got "..boss.." instead. Why?")
+  if sanitize(string.lower(boss)) ~= env_boss.id then
+    writeout("@C An error occured - we expected "..bossinfo[env_boss.id].name.." but got "..boss.." instead. Why?", 1)
   end
   time_duration = os.time() - time_start_boss
-  line = ' @Co-}@Y'..bossinfo[env_boss].name..'@C{-o  @GFINISHED: '..SecondsToClock(time_duration)
-  if player then line = line..'@w ... @C'..bossinfo[env_boss].item..'@w given to @Y'..player end
-  reportout(line)
-  EnableTriggerGroup(bossinfo[env_boss].name, false)
-  noteout("@C "..bossinfo[env_boss].name.." is dead, turning off '@Yminiexplain@C' alias.")
-  env_boss = false
+  line = ' @Co-}@Y'..bossinfo[env_boss.id].name..'@C{-o  @GFINISHED: '..SecondsToClock(time_duration)
+  if player then line = line..'@w ... @C'..bossinfo[env_boss.id].item..'@w given to @Y'..player end
+  writeout(line, 1)
+  EnableTriggerGroup(bossinfo[env_boss.id].name, false)
+  writeout("@C "..bossinfo[env_boss.id].name.." is dead, turning off '@Yminiexplain@C' alias.", 4)
+  env_boss = nil
   EnableAlias('miniexplain', false)
 end
 
 function start_boss(area, boss)
-  if sanitize(string.lower(boss)) ~= env_boss then env_bosscount = env_bosscount + 1 end
+  -- which boss we got, really important (3)
+  -- alias is now active, unimportant (0)
+  if not env_boss then env_boss = { id = nil } end
+  if sanitize(string.lower(boss)) ~= env_boss.id then env_bosscount = env_bosscount + 1 end
   time_start_boss = os.time()
-  env_boss = sanitize(string.lower(boss))
+  env_boss.id = sanitize(string.lower(boss))
   EnableTriggerGroup('me_start', false)
-  EnableTriggerGroup(bossinfo[env_boss].name, true)
-  line = ' @Co-}@Y'..bossinfo[env_boss].name..'@C{-o @w[@Y'..env_bosscount..'@w] '..bossinfo[env_boss].short
-  reportout(line)
+  EnableTriggerGroup(bossinfo[env_boss.id].name, true)
+  line = ' @Co-}@Y'..bossinfo[env_boss.id].name..'@C{-o @w[@Y'..env_bosscount..'@w] '..bossinfo[env_boss.id].short
+  writeout(line, 1)
   EnableAlias('miniexplain', true)
-  noteout("@C You can type now '@Yminiexplain@C' to explain "..bossinfo[env_boss].name.." to newbies in the group.")
+  writeout("@C You can type now '@Yminiexplain@C' to explain "..bossinfo[env_boss.id].name.." to newbies in the group.", 4)
 end
 
 function start_area()
+  -- in here we can set alias trigger status and other things, unimportant (0)
+  -- starting the run, kinda important (2)
   env_bosscount = 0
   time_start_area = os.time()
 end
 
 function end_area()
+  -- ending the run, really important (3)
   time_duration = os.time() - time_start_area
   line = ' @Co-}@Y'..env_area:upper()..'@C{-o  @GFINISHED: '..SecondsToClock(time_duration)
-  reportout(line)
+  writeout(line, 1)
   env_bosscount = false
 end
+-- #endregion
+----------------------------------
+-- #region Boss specific functions
+----------------------------------
+function fn_durthar(s)
+  if env_boss.wanted == nil then env_boss.wanted = true end
+  if s == 'trans' then
+    writeout('@Y '..bossinfo[env_boss.id].name..' @Co-}@Wtranslocated@C{-o', 1)
+    env_boss.wanted = true
+  elseif s == 'report' and env_boss.wanted then
+    writeout('@Y '..bossinfo[env_boss.id].name..' @Co-}@Wfound!@C{-o')
+    env_boss.wanted = false
+  end
+end
 
------------------
--- Zone awareness
------------------
+function fn_gjaka(s)
+  -- upon reentering the room, check what's my current hp
+end
+
+function fn_grakkr(s)
+  -- check damage, report which to switch
+  -- report aura change
+end
+
+function fn_hej(s)
+  -- check if anomaly is on the floor
+  -- check if mobs are bunched up
+end
+
+function fn_lugthurg(s)
+  -- check if boss is atacking me
+  -- report modified i'm observed if he is
+end
+
+function fn_morgak(s)
+  -- catch message when runes appear, refresh minimap
+  -- augment message of rune on the floor in the room
+end
+
+function fn_orzbuk(s)
+  -- look or study can populate name substitution - 1.orz, 2.orz, 3.orz, 4.orz (if one dies first)
+  -- study can report mob hp percentage
+  -- look can report who is tanking
+end
+
+function fn_rograg(s)
+  -- report red altar location
+  -- report boss hp occasionally if tanking
+end
+-- #endregion
+-------------------------
+-- #region Zone awareness
+-------------------------
 function OnPluginBroadcast(msg, id, name, text)
   if text == 'char.base' then
     Send_GMCP_Packet('request area')
@@ -402,7 +492,7 @@ function OnPluginBroadcast(msg, id, name, text)
         if gmcp('room.area.id') == 'titan' then
           if env_area ~= 'titan' then
             if env_area == 'terra' then
-              noteout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.')
+              writeout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.', 4, 'echo')
               EnableTriggerGroup('me_terra', false)
               debugout('me_terra trigger group OFF.')
               EnableTriggerGroup('me_bhits', false)
@@ -414,12 +504,12 @@ function OnPluginBroadcast(msg, id, name, text)
             EnableTriggerGroup('me_bhits', true)
             debugout('me_bhits trigger group ON.')
             SaveState()
-            noteout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are [@GON@W]')
+            writeout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are [@GON@W]', 4, 'echo')
           end
         elseif gmcp('room.area.id') == 'terra' then
           if env_area ~= 'terra' then
             if env_area == 'titan' then
-              noteout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.')
+              writeout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.', 4, 'echo')
               EnableTriggerGroup('me_titan', false)
               debugout('me_titan trigger group OFF.')
               EnableTriggerGroup('me_bhits', false)
@@ -431,11 +521,11 @@ function OnPluginBroadcast(msg, id, name, text)
             EnableTriggerGroup('me_bhits', true)
             debugout('me_bhits trigger group ON.')
           SaveState()
-            noteout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are [@GON@W]')
+            writeout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea entered. Triggers are [@GON@W]', 4, 'echo')
           end
         else
           if env_area == 'titan' or env_area == 'terra' then
-            noteout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.')
+            writeout(' @Co-}@Y'..string.upper(env_area)..'@C{-o @Warea left.', 4 , 'echo')
             env_area = 'out'
             EnableTriggerGroup('me_titan', false)
             debugout('me_titan trigger group OFF.')
@@ -450,10 +540,10 @@ function OnPluginBroadcast(msg, id, name, text)
     end
   end
 end
-
--------------------
--- Helpers - output
--------------------
+-- #endregion
+---------------------------
+-- #region Helpers - output
+---------------------------
 function miniepics_help()
   AnsiNote(ColoursToANSI('@C{-o @Y----------------@C[  ')..logo..ColoursToANSI('  @C]@Y---------------- @Co-}@w'))
   AnsiNote()
@@ -480,6 +570,28 @@ function miniepics_help()
   end
   -- AnsiNote(ColoursToANSI('    @Yminiepics debug   @w- toggle debug info'))
   AnsiNote()
+  AnsiNote(ColoursToANSI('  @CVerbosity level:'))
+  if env_verbosity == 1 then
+    AnsiNote(ColoursToANSI('    @Yminiepics v1      @w- [@Y'..env_verbosity_name[1]..'@w] - show only crucial messages'))
+  else
+    AnsiNote(ColoursToANSI('    @Yminiepics v1      @w- ['..env_verbosity_name[1]..'] - show only crucial messages'))
+  end
+  if env_verbosity == 2 then
+    AnsiNote(ColoursToANSI('    @Yminiepics v2      @w- [@Y'..env_verbosity_name[2]..'@w] - show all important messages'))
+  else
+    AnsiNote(ColoursToANSI('    @Yminiepics v2      @w- ['..env_verbosity_name[2]..'] - show all important messages'))
+  end
+  if env_verbosity == 3 then
+    AnsiNote(ColoursToANSI('    @Yminiepics v3      @w- [@Y'..env_verbosity_name[3]..'@w] - show all interesting messages'))
+  else
+    AnsiNote(ColoursToANSI('    @Yminiepics v3      @w- ['..env_verbosity_name[3]..'] - show all interesting messages'))
+  end
+  if env_verbosity == 4 then
+    AnsiNote(ColoursToANSI('    @Yminiepics v4      @w- [@Y'..env_verbosity_name[4]..'@w] - spam all messages'))
+  else
+    AnsiNote(ColoursToANSI('    @Yminiepics v4      @w- ['..env_verbosity_name[4]..'] - spam all messages'))
+  end
+  AnsiNote()
   AnsiNote(ColoursToANSI('  @CUsage:'))
   AnsiNote(ColoursToANSI('    @wPlugin will autodetect your current zone and activate'))
   AnsiNote(ColoursToANSI('    @wrequired triggers that report to [@Y '..env_chan..' @w] channel.'))
@@ -490,30 +602,34 @@ function miniepics_help()
 end
 
 function miniepics_explain()
-  if env_boss and env_active then
-    reportout(' @W'..bossinfo[env_boss].long)
+  if env_boss.id and env_active then
+    writeout(' @W'..bossinfo[env_boss.id].long, 1)
   end
+end
+
+function writeout(s,i,c)
+  -- s = message (string), i = verbosity level (num), c = channel overwrite (string)
+  -- i == 1 - crucial
+  -- i == 2 - important
+  -- i == 3 - normal
+  -- i == 4 - spammy
+  if i > env_verbosity then return end
+  if env_commlog then CallPlugin("b555825a4a5700c35fa80780", "storeFromOutside", AnsiToColours(logoshort)..s, 1, true) end
+  targetchannel = env_chan
+  if c ~= nil then targetchannel = c end
+  if targetchannel == 'echo' then AnsiNote(logoshort..ColoursToANSI(s)) end
+  if targetchannel == 'gt' then SendNoEcho('gt'..s..'@Y') end
+  if targetchannel == 'say' then SendNoEcho('say'..s..'@C') end
 end
 
 function debugout(e)
   if env_debug then
-    AnsiNote(logo..ColoursToANSI(' @Y[@ydebug@Y] @W'..e))
+    AnsiNote(logoshort..ColoursToANSI(' @Y[@ydebug@Y] @W'..e))
   end
 end
 
-function noteout(e)
-  if env_commlog then 
-    CallPlugin("b555825a4a5700c35fa80780", "storeFromOutside", AnsiToColours(logoshort)..e, 1, true)
-  else
-    AnsiNote(logoshort..ColoursToANSI(e))
-  end
-end
-
-function reportout(e)
-  if env_commlog then CallPlugin("b555825a4a5700c35fa80780", "storeFromOutside", AnsiToColours(logoshort)..e, 1, true) end
-  if env_chan == 'echo' then AnsiNote(logoshort..ColoursToANSI(e)) end
-  if env_chan == 'gt' then SendNoEcho('gt'..e..'@Y') end
-  if env_chan == 'say' then SendNoEcho('say'..e..'@C') end
+function miniepics_badcommand()
+  AnsiNote(logoshort..ColoursToANSI('@R Unknown command.@w Type @Yminiepics help @wfor commands and usage info.'))
 end
 
 function OnPluginInstall()
@@ -526,9 +642,10 @@ function OnPluginSaveState()
   SetVariable('env_chan', env_chan)
   SetVariable('env_active', sb(env_active))
   SetVariable('env_debug', sb(env_debug))
+  SetVariable('env_verbosity', tostring(env_verbosity))
   SetVariable('env_commlog', sb(env_commlog))
 end
-
+-- #endregion
 
 ]]>
 </script> 
