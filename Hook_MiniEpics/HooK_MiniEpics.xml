@@ -424,7 +424,7 @@ function fn_durthar(s)
     writeout('@Y '..bossinfo[env_boss.id].name..' @Co-}@Wtranslocated@C{-o', 1)
     env_boss.wanted = true
   elseif s == 'report' and env_boss.wanted then
-    writeout('@Y '..bossinfo[env_boss.id].name..' @Co-}@Wfound!@C{-o')
+    writeout('@Y '..bossinfo[env_boss.id].name..' @Co-}@Wfound!@C{-o', 1)
     env_boss.wanted = false
   end
 end
@@ -446,6 +446,17 @@ end
 function fn_lugthurg(s)
   -- check if boss is atacking me
   -- report modified i'm observed if he is
+  if s == 'obs' then
+    env_boss.wanted = true
+    env_boss.observed = true
+    writeout('@Y '..bossinfo[env_boss.id].name..' @Co-}@Wobserved!@C{-o', 1)
+    -- look and test if the boss is attacking me
+    SendNoEcho('look')
+  elseif s == 'end' then
+    env_boss.observed = false
+    writeout('@Y '..bossinfo[env_boss.id].name..' @Co-}@Wsafe@C{-o', 3)
+  end
+
 end
 
 function fn_morgak(s)
@@ -620,6 +631,11 @@ function writeout(s,i,c)
   if targetchannel == 'echo' then AnsiNote(logoshort..ColoursToANSI(s)) end
   if targetchannel == 'gt' then SendNoEcho('gt'..s..'@Y') end
   if targetchannel == 'say' then SendNoEcho('say'..s..'@C') end
+end
+
+function logofy(s)
+  -- add logo for hook, baal, boot
+  return '@Co-}'..s..'@C{-o'
 end
 
 function debugout(e)
