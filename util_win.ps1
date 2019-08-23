@@ -5,10 +5,11 @@ Function hook {
   )
   Process {
     $i = -1
-    $dest = "E:\code\hook\pkg"
+    $fldrHook = "E:\code\hook"
+    $dest = "$($fldrHook)\pkg"
     $dest2 = "E:\code\aard\worlds\plugins"
     $fileName = "Hook_MiniEpics", "Hook_Shanty", "Hook_Spellup"
-    $fldrFrm = "E:\code\hook\$($fileName[0])", "E:\code\hook\$($fileName[1])", "E:\code\hook\$($fileName[2])"
+    $fldrFrm = "$($fldrHook)\$($fileName[0])", "$($fldrHook)\$($fileName[1])", "$($fldrHook)\$($fileName[2])"
     switch ($W) {
       miniepics { $i = 0 }
       shanty { $i = 1 }
@@ -23,7 +24,7 @@ Function hook {
       Copy-Item $srcFile -Destination $destFile
       Write-Host " done."
 
-      $what = "E:\code\hook\$($fileName[$i])\$($fileName[$i])*"
+      $what = "$($fldrHook)\$($fileName[$i])\$($fileName[$i])*"
       $zipfile = "$($dest)\$($fileName[$i].Remove(0,5).ToLower()).zip"
       Write-Host "$($fileName[$i].Remove(0,5)): packing $($fileName[$i].Remove(0,5).ToLower()).zip for distribution..." -NoNewline
       if (Test-Path $zipfile) { Remove-Item $zipfile }
@@ -50,8 +51,13 @@ Function touch {
 }
 
 Function sync {
-  if ($null -eq $args[0] -Or $null -eq $args[1]) {
-    throw "Usage: sync source destination"
+  if($null -eq $args[0] -Or $null -eq $args[1]) {
+    throw "Usage: sync source destination."
   }
-  Robocopy $args[0] $args[1] /MIR /FFT /Z /XA:H /W:5
+  # Remove trailing backslash
+  $src = $args[0] -replace '\\$'
+  $src = '"' + $src + '"'
+  $dest = $args[1] -replace '\\$'
+  $dest = '"' + $dest + '"'
+  Robocopy $src $dest /MIR /FFT /Z /XA:H /W:5
 }

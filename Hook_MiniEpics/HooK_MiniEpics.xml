@@ -106,6 +106,12 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
   <trigger match="^Durthar fades into existence\.$"                                    regexp="y" enabled="n" group="Durthar" keep_evaluating="n" sequence="99" send_to="12"><send>fn_durthar('rep')</send></trigger>
   <trigger match="^.+ A Titan treads the knife's edge between Reality and the Void\.$" regexp="y" enabled="n" group="Durthar" keep_evaluating="n" sequence="99" send_to="12"><send>fn_durthar('rep')</send></trigger>
   <trigger match="^.+ Durthar is fighting .+$"                                         regexp="y" enabled="n" group="Durthar" keep_evaluating="n" sequence="99" send_to="12"><send>fn_durthar('rep')</send></trigger>
+  <!-- Lugthurg -->
+  <trigger match="^Lugthurg begins to observe your movements with intense focus\.\.\.$"                             regexp="y" enabled="n" group="Lugthurg" keep_evaluating="n" sequence="99" send_to="12"><send>fn_lugthurg('obs')</send></trigger>
+  <trigger match="^Lugthurg grins at you, and his eyes seem to read you like an open book\.$"                       regexp="y" enabled="n" group="Lugthurg" keep_evaluating="n" sequence="99" send_to="12"><send>fn_lugthurg('pan')</send></trigger>
+  <trigger match="^Lugthurg gazes at you with a blank look, as though he has just forgotten something important\.$" regexp="y" enabled="n" group="Lugthurg" keep_evaluating="n" sequence="99" send_to="12"><send>fn_lugthurg('end')</send></trigger>
+  <trigger match="^(?:.+)Lugthurg is trying to KILL YOU!$"                                                          regexp="y" enabled="n" group="Lugthurg" keep_evaluating="n" sequence="99" send_to="12"><send>fn_lugthurg('tar')</send></trigger>
+  <trigger match="^(?:.+)Lugthurg is fighting (?:.+)\.$"                                                            regexp="y" enabled="n" group="Lugthurg" keep_evaluating="n" sequence="99" send_to="12"><send>fn_lugthurg('saf')</send></trigger>
 
   <!-- TERRA -->
   <trigger match="^The white aura around (.+?)'?s? body vanishes.$"                regexp="y" enabled="n" group="me_terra" keep_evaluating="y" sequence="99" script=""></trigger>
@@ -444,19 +450,21 @@ function fn_hej(s)
 end
 
 function fn_lugthurg(s)
-  -- check if boss is atacking me
-  -- report modified i'm observed if he is
   if s == 'obs' then
-    env_boss.wanted = true
     env_boss.observed = true
-    writeout('@Y '..bossinfo[env_boss.id].name..' @Co-}@Wobserved!@C{-o', 1)
-    -- look and test if the boss is attacking me
+    writeout('@Y '..bossinfo[env_boss.id].name..' '..logofy('@Wobserved!'), 1)
     SendNoEcho('look')
+  elseif s == 'pan' then
+    if env_boss.observed and env_boss.tanking then writeout('@Y '..bossinfo[env_boss.id].name..' '..logofy('@WRESCUE PLEASE!'), 1) end
   elseif s == 'end' then
     env_boss.observed = false
-    writeout('@Y '..bossinfo[env_boss.id].name..' @Co-}@Wsafe@C{-o', 3)
+    writeout('@Y '..bossinfo[env_boss.id].name..' '..logofy('@Wsafe'), 3)
+  elseif s == 'tar' then
+    env_boss.tanking = true
+    if env_boss.observed then writeout('@Y '..bossinfo[env_boss.id].name..' '..logofy('@WRESCUE'), 1) end
+  elseif s == 'saf' then
+    env_boss.tanking = false
   end
-
 end
 
 function fn_morgak(s)
