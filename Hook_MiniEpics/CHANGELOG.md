@@ -1,9 +1,11 @@
 # Change Log
 All notable changes to this plugin will be documented in this file.
 
-## v0.6 - 
+## v0.6 - 2019-08-24
 - verbosity levels: spammy, normal, important, crucial
 - added more triggers for boss end (missed some before)
+- Lugthrug boss
+- Durthar boss
 
 ## v0.5 - 2019-08-02
 - added communication log integration
