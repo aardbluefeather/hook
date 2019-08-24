@@ -128,6 +128,7 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
   <alias match="^miniepi?c?s? test$"          regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test"></alias>
   <alias match="^miniepi?c?s? test2$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test2"></alias>
   <alias match="^miniepi?c?s? test3$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test3"></alias>
+  <alias match="^miniepi?c?s? test4$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test4"></alias>
   <alias match="^miniepi?c?s? debug$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_debug"></alias>
   <alias match="^miniepi?c?s?.+$"             regexp="y" keep_evaluating="n" sequence="99" enabled="y" script="miniepics_badcommand"></alias>
   <alias match="^miniexplain$"    name="miniexplain" regexp="y" enabled="n" script="miniepics_explain"></alias>
@@ -328,6 +329,21 @@ function miniepics_test3()
   DoAfter(11, "echo Once the Titan General is slain, Salkin quickly leads you back to the secret junction.")
   DoAfter(12, "echo You receive Salkin's Reward from Salkin.")
 end
+
+function miniepics_test4()
+  env_area = 'titan'
+  EnableTriggerGroup('me_titan', true)
+  Send("echo You receive Rune of Passage from Salkin.")
+  Send("echo Tester takes a deep breath, then leaves down a passage.")
+  Send("echo At the edge of the Abyss")
+  DoAfter(1, "echo Durthar fades into existence.")
+  DoAfter(2, "echo Durthar exclaims 'Enough! Begone, little ants!'")
+  DoAfter(3, "echo (angry) A Titan treads the knife's edge between Reality and the Void.")
+  DoAfter(4, "echo (X) Durthar is fighting Saraid.")
+  DoAfter(6, "echo Durthar exclaims 'Enough! Begone, little ants!'")
+  DoAfter(7, "echo (X) Durthar is fighting Saraid.")
+  DoAfter(8, "echo Durthar gives Durthar's Speed to Saraid.")
+end
 -- #endregion
 ----------------------------
 -- #region Trigger functions
@@ -427,10 +443,11 @@ end
 function fn_durthar(s)
   if env_boss.wanted == nil then env_boss.wanted = true end
   if s == 'trans' then
-    writeout('@Y '..bossinfo[env_boss.id].name..' @Co-}@Wtranslocated@C{-o', 1)
+    writeout(' @Y'..bossinfo[env_boss.id].name..' @Co-}@Wtranslocated@C{-o', 1)
     env_boss.wanted = true
-  elseif s == 'report' and env_boss.wanted then
-    writeout('@Y '..bossinfo[env_boss.id].name..' @Co-}@Wfound!@C{-o', 1)
+  elseif s == 'rep' and env_boss.wanted then
+    -- debugout(dump(gmcp('room.info.num')))
+    writeout(' @Y'..bossinfo[env_boss.id].name..' @Co-}@Wfound!@C{-o '..'Room: '..gmcp('room.info.num'), 1)
     env_boss.wanted = false
   end
 end
