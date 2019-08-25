@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this plugin will be documented in this file.
 
+## v0.7 - 
+- bugfixes
+- Rograg boss
+- 
+
 ## v0.6 - 2019-08-24
 - verbosity levels: spammy, normal, important, crucial
 - added more triggers for boss end (missed some before)
