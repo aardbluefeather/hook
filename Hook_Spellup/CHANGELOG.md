@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this plugin will be documented in this file.
 
+## v1.4 - 2019-09-06
+- listening to plugin broadcast for gag request
+- will start gagging' spellup lines to reduce spam
+
 ## v1.3 - 2019-06-10
 - will keep you spelled up while AFK (doing the same as with sleep/rest)
 - will try to re-spellup after writing note

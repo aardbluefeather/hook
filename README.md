@@ -7,7 +7,7 @@ Get the [`Hook_Plugin_Manager_v1.33.zip`][package_install] and unzip it in your 
 ## Folders
 * <a href="#hook-miniepics">Hook MiniEpics</a> (v0.7): a collection of triggers for use in Titan and Terra miniepics - to make life there easier
 * <a href="#hook-shanty">Hook Shanty</a> (v1.7): contains a collection of sea shanties to make your puping sessions bearable - either by outputting to room channel (say) or to area channel (yell)
-* <a href="#hook-spellup">Hook Spellup</a> (v1.3): tries to keep you spelled up while honoring different states (afk, sleeping, resting, combat)
+* <a href="#hook-spellup">Hook Spellup</a> (v1.4): tries to keep you spelled up while honoring different states (afk, sleeping, resting, combat)
 * <a href="Links/LINKS.md">Links</a>: a collection of various, potentially useful, links to aard resources
 * <a href="pkg/">pkg</a>: package folder, this is where the plugin manager downloads updates from
 

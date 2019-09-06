@@ -10,11 +10,11 @@
    save_state="y"
    date_written="2019-04-14 14:59:37"
    requires="5.06"
-   version="1.3"
+   version="1.4"
    >
 <description trim="y">
 <![CDATA[
-Hook_Spellup v1.3 loaded.
+Hook_Spellup v1.4 loaded.
 ]]>
 </description>
 
@@ -41,81 +41,83 @@ Hook_Spellup v1.3 loaded.
   <trigger match="You're drunk enough... Sober up first!"                                      enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>env_cskill = false</send></trigger>
   <trigger match="No spells or skills cast."                                                   enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>check_spells_combat()</send></trigger>
   <trigger match="You can't concentrate enough to cast *"                                      enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>check_spells_combat()</send></trigger>
-  <trigger match="Queueing spell : *."                                                         enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>env_spellup = false</send></trigger>
-  <trigger match="Queueing skill : *."                                                         enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>env_spellup = false</send></trigger>
+  <trigger match="Queueing spell : *."                                                         enabled="n" keep_evaluating="n" omit_from_output="y" name="queue_spell" group="spellup" send_to="12" sequence="100" script="queue_spells"></trigger>
+  <trigger match="Queueing skill : *."                                                         enabled="n" keep_evaluating="n" omit_from_output="y" name="queue_skill" group="spellup" send_to="12" sequence="100" script="queue_spells"></trigger>
   <!-- need spellup -->
   <trigger match="You lost your concentration while trying to cast *"                          enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>failed_spell()</send></trigger>
   <trigger match="Your head starts to pound as you sober up."                                  enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_cskill()</send></trigger>
   <trigger match="You die."                                                                    enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>env_spellup = true;env_cskill = true</send></trigger>
   <!-- ask for spellup -->
-  <trigger match="You are no longer merged with the shadows."                                  enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You no longer move in the shadows."                                          enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You are no longer invisible."                                                enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your rage ebbs."                                                             enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your pulse slows to a normal rate."                                          enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your mental barrier breaks down."                                            enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your divine swiftness slows to a halt."                                      enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your moral standing is no longer cloaked."                                   enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your intellectual fortress crumbles."                                        enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your force shield shimmers then fades away."                                 enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your anti-magic shell disappears."                                           enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your mind feels less awake."                                                 enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your inertial barrier dissipates."                                           enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your force field wavers and dissipates."                                     enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your prayer of fortune weakens."                                             enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your magical barrier against fire shimmers and disappears."                  enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your godly embrace relaxes."                                                 enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your mystic might fades away."                                               enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your magical armor wears away."                                              enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your globe of darkness vanishes."                                            enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your body softens."                                                          enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="A momentary lapse of concentration causes your thought shield to fade away." enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You no longer feel so intelligent."                                          enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You no longer feel so huge."                                                 enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You no longer feel protected by the forces of shadow."                       enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You no longer feel enlightened."                                             enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You no longer feel compressed."                                              enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You no longer see in the dark."                                              enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You no longer absorb magical attacks."                                       enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You no longer absorb energy."                                                enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel weaker."                                                            enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel solid again."                                                       enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel weaker as you question your faith."                                 enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel the loss of your champion's strength."                              enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel more vulnerable to electricity."                                    enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel more vulnerable to disease."                                        enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel more vulnerable to cold."                                           enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel more vulnerable to acid."                                           enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel more vulnerable as the spirits leave your side."                    enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel less righteous as the blessing upon you fades."                     enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel less resistant to poison."                                          enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel less resistant to light and holy attacks."                          enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel less protected."                                                    enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel less protected from destructive energies."                          enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel less perceptive."                                                   enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel less holy."                                                         enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel less in control of your will."                                      enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You feel almost blind at the loss of your magical sight."                    enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You can no longer sense anger."                                              enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You can no longer avoid some attacks."                                       enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You are no longer surrounded by your party shield."                          enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You are no longer quite so calculating."                                     enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You are no longer in harmony with yourself."                                 enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You are no longer displaced."                                                enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You are no longer channelling energy."                                       enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You are no longer blurred."                                                  enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="The texture of your skin returns to normal."                                 enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="The magic circle around you shimmers and fades away."                        enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="The bark surrounding your skin peels away, leaving you more vulnerable."     enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="The aura around your body fades away."                                       enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="The adrenaline rush wears off."                                              enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You are no longer manipulating time."                                        enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your globe of invulnerability shimmers and fades."                           enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your battle sense has faded."                                                enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger> 
-  <trigger match="Your mental abilities feel less balanced."                                   enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="Your skin feels soft again."                                                 enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="You slowly float to the ground."                                             enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
-  <trigger match="## You may now use projection abilities."                                    enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_spells()</send></trigger>
+  <trigger match="You are no longer merged with the shadows."                                  enabled="n" keep_evaluating="n" omit_from_output="y" name="shadow_form"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You no longer move in the shadows."                                          enabled="n" keep_evaluating="n" omit_from_output="y" name="shadows"                  group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You emerge from the shadows."                                                enabled="n" keep_evaluating="n" omit_from_output="y" name="sneak"                    group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You are no longer invisible."                                                enabled="n" keep_evaluating="n" omit_from_output="y" name="invis"                    group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your rage ebbs."                                                             enabled="n" keep_evaluating="n" omit_from_output="y" name="frenzy"                   group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your pulse slows to a normal rate."                                          enabled="n" keep_evaluating="n" omit_from_output="y" name="magical_rush"             group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your mental barrier breaks down."                                            enabled="n" keep_evaluating="n" omit_from_output="y" name="mental_barrier"           group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your divine swiftness slows to a halt."                                      enabled="n" keep_evaluating="n" omit_from_output="y" name="divine_swiftness"         group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your moral standing is no longer cloaked."                                   enabled="n" keep_evaluating="n" omit_from_output="y" name="grey_aura"                group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your intellectual fortress crumbles."                                        enabled="n" keep_evaluating="n" omit_from_output="y" name="intellect_fortress"       group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your force shield shimmers then fades away."                                 enabled="n" keep_evaluating="n" omit_from_output="y" name="shield"                   group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your anti-magic shell disappears."                                           enabled="n" keep_evaluating="n" omit_from_output="y" name="antimagic_shell"          group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your mind feels less awake."                                                 enabled="n" keep_evaluating="n" omit_from_output="y" name="awakening"                group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your inertial barrier dissipates."                                           enabled="n" keep_evaluating="n" omit_from_output="y" name="inertial_barrier"         group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your force field wavers and dissipates."                                     enabled="n" keep_evaluating="n" omit_from_output="y" name="line_of_protection"       group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your prayer of fortune weakens."                                             enabled="n" keep_evaluating="n" omit_from_output="y" name="prayer_of_fortune"        group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your magical barrier against fire shimmers and disappears."                  enabled="n" keep_evaluating="n" omit_from_output="y" name="heat_shield"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your godly embrace relaxes."                                                 enabled="n" keep_evaluating="n" omit_from_output="y" name="godly_embrace"            group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your mystic might fades away."                                               enabled="n" keep_evaluating="n" omit_from_output="y" name="mystic_might"             group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your magical armor wears away."                                              enabled="n" keep_evaluating="n" omit_from_output="y" name="armor"                    group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your globe of darkness vanishes."                                            enabled="n" keep_evaluating="n" omit_from_output="y" name="darkness"                 group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your body softens."                                                          enabled="n" keep_evaluating="n" omit_from_output="y" name="harden_body"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="A momentary lapse of concentration causes your thought shield to fade away." enabled="n" keep_evaluating="n" omit_from_output="y" name="thought_shield"           group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You no longer feel so intelligent."                                          enabled="n" keep_evaluating="n" omit_from_output="y" name="revelation"               group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You no longer feel so huge."                                                 enabled="n" keep_evaluating="n" omit_from_output="y" name="enhanced_strength"        group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You no longer feel protected by the forces of shadow."                       enabled="n" keep_evaluating="n" omit_from_output="y" name="protection_good"          group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You no longer feel enlightened."                                             enabled="n" keep_evaluating="n" omit_from_output="y" name="enlightenment"            group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You no longer feel compressed."                                              enabled="n" keep_evaluating="n" omit_from_output="y" name="compression"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You no longer see in the dark."                                              enabled="n" keep_evaluating="n" omit_from_output="y" name="night_vision"             group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You no longer absorb magical attacks."                                       enabled="n" keep_evaluating="n" omit_from_output="y" name="absorb"                   group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You no longer absorb energy."                                                enabled="n" keep_evaluating="n" omit_from_output="y" name="energy_containment"       group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel weaker."                                                            enabled="n" keep_evaluating="n" omit_from_output="y" name="giant_strength"           group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel solid again."                                                       enabled="n" keep_evaluating="n" omit_from_output="y" name="pass_door"                group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel weaker as you question your faith."                                 enabled="n" keep_evaluating="n" omit_from_output="y" name="power_of_faith"           group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel the loss of your champion's strength."                              enabled="n" keep_evaluating="n" omit_from_output="y" name="champions_strength"       group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel more vulnerable to electricity."                                    enabled="n" keep_evaluating="n" omit_from_output="y" name="shockproof"               group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel more vulnerable to disease."                                        enabled="n" keep_evaluating="n" omit_from_output="y" name="vaccinate"                group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel more vulnerable to cold."                                           enabled="n" keep_evaluating="n" omit_from_output="y" name="warmth"                   group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel more vulnerable to acid."                                           enabled="n" keep_evaluating="n" omit_from_output="y" name="acidproof"                group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel more vulnerable as the spirits leave your side."                    enabled="n" keep_evaluating="n" omit_from_output="y" name="spirit_shield"            group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel less righteous as the blessing upon you fades."                     enabled="n" keep_evaluating="n" omit_from_output="y" name="bless"                    group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel less resistant to poison."                                          enabled="n" keep_evaluating="n" omit_from_output="y" name="toxic_resistance"         group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel less resistant to light and holy attacks."                          enabled="n" keep_evaluating="n" omit_from_output="y" name="holy_mirror"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel less protected."                                                    enabled="n" keep_evaluating="n" omit_from_output="y" name="aid"                      group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel less protected from destructive energies."                          enabled="n" keep_evaluating="n" omit_from_output="y" name="energy_shield"            group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel less perceptive."                                                   enabled="n" keep_evaluating="n" omit_from_output="y" name="perception"               group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel less holy."                                                         enabled="n" keep_evaluating="n" omit_from_output="y" name="holy_aura"                group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel less in control of your will."                                      enabled="n" keep_evaluating="n" omit_from_output="y" name="willpower"                group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You feel almost blind at the loss of your magical sight."                    enabled="n" keep_evaluating="n" omit_from_output="y" name="true_seeing"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You can no longer sense anger."                                              enabled="n" keep_evaluating="n" omit_from_output="y" name="sense_anger"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You can no longer avoid some attacks."                                       enabled="n" keep_evaluating="n" omit_from_output="y" name="avoidance"                group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You are no longer surrounded by your party shield."                          enabled="n" keep_evaluating="n" omit_from_output="y" name="party_shield"             group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You are no longer quite so calculating."                                     enabled="n" keep_evaluating="n" omit_from_output="y" name="calculation"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You are no longer in harmony with yourself."                                 enabled="n" keep_evaluating="n" omit_from_output="y" name="self_harmony"             group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You are no longer displaced."                                                enabled="n" keep_evaluating="n" omit_from_output="y" name="displacement"             group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You are no longer channelling energy."                                       enabled="n" keep_evaluating="n" omit_from_output="y" name="channel_energy"           group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You are no longer blurred."                                                  enabled="n" keep_evaluating="n" omit_from_output="y" name="blur"                     group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="The texture of your skin returns to normal."                                 enabled="n" keep_evaluating="n" omit_from_output="y" name="flesh_armor"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="The magic circle around you shimmers and fades away."                        enabled="n" keep_evaluating="n" omit_from_output="y" name="magic_circle"             group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="The bark surrounding your skin peels away, leaving you more vulnerable."     enabled="n" keep_evaluating="n" omit_from_output="y" name="barkskin"                 group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="The aura around your body fades away."                                       enabled="n" keep_evaluating="n" omit_from_output="y" name="indestructible_aura"      group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="The adrenaline rush wears off."                                              enabled="n" keep_evaluating="n" omit_from_output="y" name="adrenaline_control"       group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You are no longer manipulating time."                                        enabled="n" keep_evaluating="n" omit_from_output="y" name="timeshifting"             group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your globe of invulnerability shimmers and fades."                           enabled="n" keep_evaluating="n" omit_from_output="y" name="globe_of_invulnerability" group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your battle sense has faded."                                                enabled="n" keep_evaluating="n" omit_from_output="y" name="combat_mind"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger> 
+  <trigger match="Your mental abilities feel less balanced."                                   enabled="n" keep_evaluating="n" omit_from_output="y" name="mental_balance"           group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="Your skin feels soft again."                                                 enabled="n" keep_evaluating="n" omit_from_output="y" name="stone_skin"               group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You slowly float to the ground."                                             enabled="n" keep_evaluating="n" omit_from_output="y" name="fly"                      group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You return to the living world."                                             enabled="n" keep_evaluating="n" omit_from_output="y" name="wraith_form"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="## You may now use projection abilities."                                    enabled="n" keep_evaluating="n" omit_from_output="y" name="power_projection"         group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
   <!-- warn about afflix and pvp -->
   <trigger match="You are trapped in an invisible web!"                                        enabled="n" keep_evaluating="n" group="warning" send_to="12" sequence="100"><send>issue_warning('web1', '')</send></trigger>
   <trigger match="You start to feel unlucky."                                                  enabled="n" keep_evaluating="n" group="warning" send_to="12" sequence="100"><send>issue_warning('curse', '')</send></trigger>
@@ -168,7 +170,8 @@ local c_magenta = ANSI(35)
 local c_cyan = ANSI(36)
 local c_white = ANSI(37)
 -- set script name for later use
-local logo = ColoursToANSI('@Co-}@YHooK@C{-o @x051A@x044u@x037t@x030o @x051S@x044pe@x037ll@x030up @cv@C1@c.@C3')
+local logo = ColoursToANSI('@Co-}@YHooK@C{-o @Y[@x051Au@x044t@x037oS@x030p@x037el@x044l@x051up@Y] @cv@C1@c.@C4')
+local logoshort = ColoursToANSI('@Y[@x051Au@x044t@x037oS@x030p@x037el@x044l@x051up@Y]')
 
 -------------------
 -- Helper functions
@@ -176,6 +179,18 @@ local logo = ColoursToANSI('@Co-}@YHooK@C{-o @x051A@x044u@x037t@x030o @x051S@x04
 function sb(b) if b then return 'true' else return 'false' end end
 function gb(s) if s == 'true' then return true else return false end end
 function PadString(str, len, char) if char == nil then char = ' ' end return string.rep(char, len - #str) .. str end
+function dump(o)
+  if type(o) == 'table' then
+     local s = '{ '
+     for k,v in pairs(o) do
+        if type(k) ~= 'number' then k = '"'..k..'"' end
+        s = s .. '['..k..'] = ' .. dump(v) .. ','
+     end
+     return s .. '} '
+  else
+     return tostring(o)
+  end
+end
 
 -----------------
 -- Default values
@@ -196,6 +211,7 @@ sanc_bag1   = GetVariable('sanc_bag1') or '1' -- container for aura1
 sanc_bag2   = GetVariable('sanc_bag2') or '2' -- container for aura2
 warn_chan   = GetVariable('warn_chan') or 'gt' -- default channel for warnings
 player_stat = '1' -- gmcp('char.status.state')
+env_gag     = false -- dial down the spam from the screen if needed
 
 ------------------------
 -- Main trigger function
@@ -248,6 +264,28 @@ function OnPluginBroadcast(msg, id, name, text)
         end
       end
     end
+    -- Listen to GAG options
+    if id == '40d90f1d52244dfd57c79bab' then
+      -- msg = 11 -- definiran arg[0] u BroadcastPlugin()
+      -- id = 40d90f1d52244dfd57c79bab -- id plugina
+      -- name = WarsEnchantBot -- name plugina
+      -- text = gagON -- definiran arg[1] u BroadcastPlugin()
+      if text == 'gagON' then
+        env_gag = true
+        debugout('Cought broadcast gagON')
+        debugout('msg: '..dump(msg))
+        debugout('id: '..dump(id))
+        debugout('name: '..dump(name))
+        debugout('text: '..dump(text))
+      elseif text == 'gagOFF' then
+        env_gag = false
+        debugout('Cought broadcast gagOFF')
+        debugout('msg: '..dump(msg))
+        debugout('id: '..dump(id))
+        debugout('name: '..dump(name))
+        debugout('text: '..dump(text))
+      end
+    end
   end
 end
 
@@ -259,13 +297,13 @@ function toggle_spellup()
     env_active = false
     SetVariable('env_active', sb(env_active))
     EnableTriggerGroup('spellup', false)
-    AnsiNote(logo..ColoursToANSI('@w script turned @ROFF'))
+    AnsiNote(logoshort..ColoursToANSI('@w script turned @ROFF'))
   else
     env_init = false
     env_active = true
     SetVariable('env_active', sb(env_active))
     EnableTriggerGroup('spellup', true)
-    AnsiNote(logo..ColoursToANSI('@w script turned @GON'))
+    AnsiNote(logoshort..ColoursToANSI('@w script turned @GON'))
   end
 end
 
@@ -274,12 +312,12 @@ function toggle_sanctuary()
     env_active2 = false
     SetVariable('env_active2', sb(env_active2))
     EnableTriggerGroup('sanc', false)
-    AnsiNote(logo..ColoursToANSI('@w sanctuary watching turned @ROFF'))
+    AnsiNote(logoshort..ColoursToANSI('@w sanctuary watching turned @ROFF'))
   else
     env_active2 = true
     SetVariable('env_active2', sb(env_active2))
     EnableTriggerGroup('sanc', true)
-    AnsiNote(logo..ColoursToANSI('@w sanctuary watching turned @GON'))
+    AnsiNote(logoshort..ColoursToANSI('@w sanctuary watching turned @GON'))
   end
 end
 
@@ -288,12 +326,12 @@ function toggle_warning()
     env_active3 = false
     SetVariable('env_active3', sb(env_active3))
     EnableTriggerGroup('warning', false)
-    AnsiNote(logo..ColoursToANSI('@w sanctuary watching turned @ROFF'))
+    AnsiNote(logoshort..ColoursToANSI('@w sanctuary watching turned @ROFF'))
   else
     env_active3 = true
     SetVariable('env_active3', sb(env_active3))
     EnableTriggerGroup('warning', true)
-    AnsiNote(logo..ColoursToANSI('@w sanctuary watching turned @GON'))
+    AnsiNote(logoshort..ColoursToANSI('@w sanctuary watching turned @GON'))
   end
 end
 
@@ -301,22 +339,33 @@ function toggle_debug()
   if env_debug then
     env_debug = false
     SetVariable('env_debug', sb(env_debug))
-    AnsiNote(logo..ColoursToANSI('@w debug output turned @ROFF'))
+    AnsiNote(logoshort..ColoursToANSI('@w debug output turned @ROFF'))
   else
     env_debug = true
     SetVariable('env_debug', sb(env_debug))
-    AnsiNote(logo..ColoursToANSI('@w debug output turned @GON'))
+    AnsiNote(logoshort..ColoursToANSI('@w debug output turned @GON'))
   end
 end
 
 --------------------
 -- Autospellup alias
 --------------------
-function need_spells()
+function need_spells(name, line, wc)
+  -- name = splp08
+  -- line = Your moral standing is no longer cloaked.
+  -- wc = { [0] = "Your moral standing is no longer cloaked." } 
   if not env_spellup then
     env_spellup = true
     if gmcp('char.status.state') == '3' then debugout('Need spells trigger - Out of Combat -> give_spellup()') give_spellup() end
   end
+  if not env_gag then writeout(line) end
+  debugout(name:gsub('_',' ')..' @w--> @roff!')
+end
+
+function queue_spells(name, line, wc)
+  env_spellup = false
+  if not env_gag then writeout(line) end
+  if env_gag then debugout('Gagging line: @w'..line) end
 end
 
 function failed_spell()
@@ -408,7 +457,7 @@ function check_sanc()
     AnsiNote(ColoursToANSI('    @wUnable to cast sanctuary, you can do it later manually:'))
     AnsiNote(ColoursToANSI('    @w - @Yss sanc reset'))
     AnsiNote()
-    AnsiNote(ColoursToANSI('@C{-o @Y---------------------------------------------------------------- @Co-}@w'))
+    AnsiNote(ColoursToANSI('@C{-o @Y----------------------------------------------------------------- @Co-}@w'))
     sanc_lost()
   end
 end
@@ -417,19 +466,19 @@ function setup_autosanc(i, j)
   if i == 'aura1' then
     sanc_aura1 = j
     SetVariable('sanc_aura1', sanc_aura1)
-    AnsiNote(logo..ColoursToANSI('@w sanc_aura1 set to: @G'..sanc_aura1))
+    AnsiNote(logoshort..ColoursToANSI('@w sanc_aura1 set to: @G'..sanc_aura1))
   elseif i == 'aura2' then
     sanc_aura2 = j
     SetVariable('sanc_aura2', sanc_aura2)
-    AnsiNote(logo..ColoursToANSI('@w sanc_aura2 set to: @G'..sanc_aura2))
+    AnsiNote(logoshort..ColoursToANSI('@w sanc_aura2 set to: @G'..sanc_aura2))
   elseif i == 'bag1' then
     sanc_bag1 = j
     SetVariable('sanc_bag1', sanc_bag1)
-    AnsiNote(logo..ColoursToANSI('@w sanc_bag1 set to: @G'..sanc_bag1))
+    AnsiNote(logoshort..ColoursToANSI('@w sanc_bag1 set to: @G'..sanc_bag1))
   elseif i == 'bag2' then
     sanc_bag2 = j
     SetVariable('sanc_bag2', sanc_bag2)
-    AnsiNote(logo..ColoursToANSI('@w sanc_bag2 set to: @G'..sanc_bag2))
+    AnsiNote(logoshort..ColoursToANSI('@w sanc_bag2 set to: @G'..sanc_bag2))
   end
 end
 
@@ -445,7 +494,7 @@ function issue_warning(what, who)
   elseif what == 'revenge1' then warn_message = '@Co-} @R>>@YREVENGE@R<< @C{-o @M'..who..'$C has revenge on me for @M15 $Cminutes!'
   elseif what == 'revenge2' then warn_message = '@Co-} @R>>@YREVENGE@R<< @C{-o $CI can now take revenge on @M'..who..'$C for @M15 $Cminutes!' end
   if warn_chan == 'local' then
-    AnsiNote(logo..' '..ColoursToANSI(string.gsub(warn_message,'$C','@W')))
+    AnsiNote(logoshort..' '..ColoursToANSI(string.gsub(warn_message,'$C','@W')))
   else
     Send(warn_chan..' '..warn_message)
   end
@@ -455,9 +504,9 @@ function setup_warning(c)
   if c == 'gt' or c == 'ct' or c == 'repl' or c == 'say' or c == 'spouse' or c == 'local' then
     warn_chan = c
     SetVariable('warn_chan', warn_chan)
-    AnsiNote(logo..ColoursToANSI('@w channel set to: @Y'..warn_chan))
+    AnsiNote(logoshort..ColoursToANSI('@w channel set to: @Y'..warn_chan))
   else
-    AnsiNote(logo..ColoursToANSI('@w accepted arguments are: @Ygt@w, @Yct@w, @Yrepl@w, @Ysay@w, @Yspouse@w, @Ylocal@w.'))
+    AnsiNote(logoshort..ColoursToANSI('@w accepted arguments are: @Ygt@w, @Yct@w, @Yrepl@w, @Ysay@w, @Yspouse@w, @Ylocal@w.'))
   end
 end
 
@@ -509,13 +558,17 @@ function autospellup_help()
   AnsiNote(ColoursToANSI('    @Y  sanctuary aura ID:             @W')..PadString(sanc_aura2,16))
   AnsiNote(ColoursToANSI('    @Y  bag for sanctuary aura ID:     @W')..PadString(sanc_bag2,16))
   AnsiNote()
-  AnsiNote(ColoursToANSI('@C{-o @Y---------------------------------------------------------------- @Co-}@w'))
+  AnsiNote(ColoursToANSI('@C{-o @Y----------------------------------------------------------------- @Co-}@w'))
 end
 
 function debugout(e)
   if env_debug then
-    AnsiNote(logo..ColoursToANSI(' @Y[@ydebug@Y] @W'..e))
+    AnsiNote(logoshort..ColoursToANSI(' @Y[@ydebug@Y] @W'..e))
   end
+end
+
+function writeout(s)
+  AnsiNote(ColoursToANSI('@w'..s..'@w'))
 end
 
 function OnPluginInstall()
