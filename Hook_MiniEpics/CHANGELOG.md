@@ -1,10 +1,13 @@
 # Change Log
 All notable changes to this plugin will be documented in this file.
 
-## v0.7 - 
+## v0.8 - 2020-05-17
+- Orzbuk boss (look to report tanks, **rep***ort* command)
+- Grakkr boss (**rep***ort* ***damtype*** command)
+
+## v0.7 - 2019-08-25
 - bugfixes
 - Rograg boss
-- 
 
 ## v0.6 - 2019-08-24
 - verbosity levels: spammy, normal, important, crucial

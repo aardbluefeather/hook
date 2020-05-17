@@ -10,7 +10,7 @@
    save_state="y"
    date_written="2019-06-26 21:47:01"
    requires="5.06"
-   version="0.7"
+   version="0.8"
    >
 <description trim="y">
 <![CDATA[
@@ -51,14 +51,14 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
   <trigger match="^You receive Salkin's Reward from Salkin\.$"            regexp="y" enabled="n" group="me_titan" sequence="99" script="end_area"></trigger>
   <trigger match="^.+ takes a deep breath, then leaves down a passage\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>EnableTriggerGroup('me_start', true)</send></trigger>
   <!-- Boss start -->
-  <trigger match="^At the edge of the Abyss$" regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Durthar')</send></trigger>
-  <trigger match="^Shattered reality$"        regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Gjaka')</send></trigger>
-  <trigger match="^A small chamber$"          regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Grakkr')</send></trigger>
-  <trigger match="^A vast plain$"             regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Hej')</send></trigger>
-  <trigger match="^A crystal chamber$"        regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Lugthurg')</send></trigger>
-  <trigger match="^A large arena$"            regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Morgak')</send></trigger>
-  <trigger match="^A crystal seal$"           regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Orzbuk')</send></trigger>
-  <trigger match="^A ritual chamber$"         regexp="y" enabled="n" group="me_start" sequence="99" send_to="12"><send>start_boss('titan','Rograg')</send></trigger>
+  <trigger match="^At the edge of the Abyss$" regexp="y" enabled="n" group="me_start" sequence="80" send_to="12"><send>start_boss('titan','Durthar')</send></trigger>
+  <trigger match="^Shattered reality$"        regexp="y" enabled="n" group="me_start" sequence="80" send_to="12"><send>start_boss('titan','Gjaka')</send></trigger>
+  <trigger match="^A small chamber$"          regexp="y" enabled="n" group="me_start" sequence="80" send_to="12"><send>start_boss('titan','Grakkr')</send></trigger>
+  <trigger match="^A vast plain$"             regexp="y" enabled="n" group="me_start" sequence="80" send_to="12"><send>start_boss('titan','Hej')</send></trigger>
+  <trigger match="^A crystal chamber$"        regexp="y" enabled="n" group="me_start" sequence="80" send_to="12"><send>start_boss('titan','Lugthurg')</send></trigger>
+  <trigger match="^A large arena$"            regexp="y" enabled="n" group="me_start" sequence="80" send_to="12"><send>start_boss('titan','Morgak')</send></trigger>
+  <trigger match="^A crystal seal$"           regexp="y" enabled="n" group="me_start" sequence="80" send_to="12"><send>start_boss('titan','Orzbuk')</send></trigger>
+  <trigger match="^A ritual chamber$"         regexp="y" enabled="n" group="me_start" sequence="80" send_to="12"><send>start_boss('titan','Rograg')</send></trigger>
   <!-- Boss end v1 -->
   <trigger match="^Durthar gives Durthar's Speed to (.+)\.$"     regexp="y" enabled="n" group="Durthar"  sequence="99" send_to="12"><send>end_boss('titan','Durthar',"%1")</send></trigger>
   <trigger match="^Gjaka gives Gjaka's Burden to (.+)\.$"        regexp="y" enabled="n" group="Gjaka"    sequence="99" send_to="12"><send>end_boss('titan','Gjaka',"%1")</send></trigger>
@@ -116,6 +116,10 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
   <trigger match="^(?:.+) rescues you!$"                                                                            regexp="y" enabled="n" group="Lugthurg" keep_evaluating="n" sequence="99" send_to="12"><send>fn_lugthurg('saf')</send></trigger>
   <!-- Rograg -->
   <trigger match="^As an Ethereal Guardian fades away, the altar glows faintly red\.$" regexp="y" enabled="n" group="Rograg" keep_evaluating="n" sequence="99" send_to="12"><send>fn_rograg('red')</send></trigger>
+  <!-- Orzbuk -->
+  <trigger match="^A crystal seal$" regexp="y" enabled="y" group="Orzbuk" keep_evaluating="n" sequence="105" send_to="12"><send>fn_orzbuk('catch')</send></trigger>
+  <!-- Grakkr -->
+  <trigger match="^An Aura of Protective Magic begins floating around \S+\.$" regexp="y" enabled="y" group="Grakkr" keep_evaluating="n" sequence="99" send_to="12"><send>fn_grakkr('init')</send></trigger>
 
   <!-- TERRA -->
   <trigger match="^The white aura around (.+?)'?s? body vanishes.$"                regexp="y" enabled="n" group="me_terra" keep_evaluating="y" sequence="99" script=""></trigger>
@@ -132,18 +136,19 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
   <alias match="^miniepi?c?s? test1$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test1"></alias>
   <alias match="^miniepi?c?s? test2$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test2"></alias>
   <alias match="^miniepi?c?s? test3$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test3"></alias>
+  <alias match="^miniepi?c?s? test4$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test4"></alias>
   <alias match="^miniepi?c?s? (Durthar|Gjaka|Grakkr|Hej|Lugthurg|Morgak|Orzbuk|Rograg)$" regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_test_boss"></alias>
   <alias match="^miniepi?c?s? debug$"         regexp="y" keep_evaluating="n" sequence="91" enabled="y" script="miniepics_debug"></alias>
   <alias match="^miniepi?c?s?.+$"             regexp="y" keep_evaluating="n" sequence="99" enabled="y" script="miniepics_badcommand"></alias>
-  <alias match="^miniexplain$"    name="miniexplain" regexp="y" enabled="n" script="miniepics_explain"></alias>
-  <alias match="^repo?r?t?$"      name="Durthar"  group="TitanBoss" regexp="y" enabled="n" send_to="12"><send>fn_durthar('report')</send></alias>
-  <alias match="^repo?r?t?$"      name="Gjaka"    group="TitanBoss" regexp="y" enabled="n" send_to="12"><send>fn_gjaka('report')</send></alias>
-  <alias match="^repo?r?t?$"      name="Grakkr"   group="TitanBoss" regexp="y" enabled="n" send_to="12"><send>fn_grakkr('report')</send></alias>
-  <alias match="^repo?r?t?$"      name="Hej"      group="TitanBoss" regexp="y" enabled="n" send_to="12"><send>fn_hej('report')</send></alias>
-  <alias match="^repo?r?t?$"      name="Lugthurg" group="TitanBoss" regexp="y" enabled="n" send_to="12"><send>fn_lugthurg('report')</send></alias>
-  <alias match="^repo?r?t?$"      name="Morgak"   group="TitanBoss" regexp="y" enabled="n" send_to="12"><send>fn_morgak('report')</send></alias>
-  <alias match="^repo?r?t?$"      name="Orzbuk"   group="TitanBoss" regexp="y" enabled="n" send_to="12"><send>fn_orzbuk('report')</send></alias>
-  <alias match="^repo?r?t?$"      name="Rograg"   group="TitanBoss" regexp="y" enabled="n" send_to="12"><send>fn_rograg('report')</send></alias>
+  <alias match="^miniexplain$"     name="miniexplain"                regexp="y" sequence="99" enabled="n" script="miniepics_explain"></alias>
+  <alias match="^repo?r?t?$"       name="Durthar"  group="TitanBoss" keep_evaluating="n" regexp="y" sequence="99" enabled="n" send_to="12"><send>fn_durthar('report')</send></alias>
+  <alias match="^repo?r?t?$"       name="Gjaka"    group="TitanBoss" keep_evaluating="n" regexp="y" sequence="99" enabled="n" send_to="12"><send>fn_gjaka('report')</send></alias>
+  <alias match="^repo?r?t? (\S+)$" name="Grakkr"   group="TitanBoss" keep_evaluating="n" regexp="y" sequence="99" enabled="n" send_to="12"><send>fn_grakkr('report', '%1')</send></alias>
+  <alias match="^repo?r?t?$"       name="Hej"      group="TitanBoss" keep_evaluating="n" regexp="y" sequence="99" enabled="n" send_to="12"><send>fn_hej('report')</send></alias>
+  <alias match="^repo?r?t?$"       name="Lugthurg" group="TitanBoss" keep_evaluating="n" regexp="y" sequence="99" enabled="n" send_to="12"><send>fn_lugthurg('report')</send></alias>
+  <alias match="^repo?r?t?$"       name="Morgak"   group="TitanBoss" keep_evaluating="n" regexp="y" sequence="99" enabled="n" send_to="12"><send>fn_morgak('report')</send></alias>
+  <alias match="^repo?r?t?$"       name="Orzbuk"   group="TitanBoss" keep_evaluating="n" regexp="y" sequence="99" enabled="n" send_to="12"><send>fn_orzbuk('report')</send></alias>
+  <alias match="^repo?r?t?$"       name="Rograg"   group="TitanBoss" keep_evaluating="n" regexp="y" sequence="99" enabled="n" send_to="12"><send>fn_rograg('report')</send></alias>
 </aliases>
 <!--  #endregion  -->
 
@@ -185,8 +190,9 @@ function ClockFormat(h,m,s) return '@W'..string.format('%02.f', h)..'@wh @W'..st
 -------------------------
 require "gmcphelper"
 require "serialize"
+require "wait"
 dofile(GetPluginInfo(GetPluginID(),20).."aardwolf_colors.lua")
-local logo = ColoursToANSI('@Co-}@YHooK@C{-o  @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C7')
+local logo = ColoursToANSI('@Co-}@YHooK@C{-o  @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C8')
 local logoshort = ColoursToANSI('@Y[@x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs@Y]')
 local env_active = gb(GetVariable('env_active')) or true
 local env_debug = gb(GetVariable('env_debug')) or false
@@ -195,6 +201,8 @@ local env_area = GetVariable('env_area') or 'out'
 local env_chan = GetVariable('env_chan') or 'echo'
 local env_verbosity = tonumber(GetVariable('env_verbosity')) or 3
 local env_verbosity_name = {'crucial', 'important', 'interesting', 'spammy'}
+local env_orzbuk_default = {["Orzbuk's right leg"] = true,["Orzbuk's left leg"] = true,["Orzbuk's right arm"] = true,["Orzbuk's left arm"] = true}
+local env_orzbuk = false
 local bosstitan = { "Grakkr", "Hej", "Orzbuk", "Lugthurg", "Gjaka", "Morgak", "Durthar", "Rograg" }
 local bossterra = { "Kjare", "Skeligh", "Yqath", "Vortath", "Salkin", "Nysil", "Yrelth", "Ksajus" }
 local bossinfo = {
@@ -246,6 +254,21 @@ local bossinfo = {
     short = '@wthe "@Galtar@w" boss.',
     long = "Main tank will 'nod salkin' to get transferred to Rograg. The rest will kill the guardians until they find red color of the altar. Then the titan in the center will be pushed to that altar, killed, and the heart sacrificed. Another titan will appear in his place (not in center). Keep killing the titans and sacrificing the heart."
   }
+}
+local study_patterns = {
+  {match = "You .+", val = "me", avg = 0},
+  {match = "(.+) is in perfect health.", val = "100%", avg = 100},
+  {match = "(.+) has a few minor scratches.", val = "99% - 95%", avg = 97},
+  {match = "(.+) is showing a few grazes.", val = "94% - 85%", avg = 90},
+  {match = "(.+) is bleeding lightly.", val = "84% - 75%", avg = 80},
+  {match = "(.+) has some small wounds and bruises.", val = "74% - 65%", avg = 70},
+  {match = "(.+) is showing a few battle scars.", val = "64% - 55%", avg = 60},
+  {match = "(.+) has quite a few wounds.", val = "54% - 45%", avg = 50},
+  {match = "(.+) has some big nasty wounds and scratches.", val = "44% - 35%", avg = 40},
+  {match = "(.+) has some very nasty wounds.", val = "34% - 25%", avg = 30},
+  {match = "(.+) needs a hospital.", val = "24% - 15%", avg = 20},
+  {match = "(.+) is gravely injured.", val = "14% - 5%", avg = 10},
+  {match = "(.+) is at death's door.", val = "4% - 0%", avg = 2}
 }
 -- #endregion
 --------------------------
@@ -349,6 +372,17 @@ function miniepics_test3()
   DoAfter(12, "echo You receive Salkin's Reward from Salkin.")
 end
 
+function miniepics_test4()
+  env_area = 'titan'
+  EnableTriggerGroup('me_titan', true)
+  EnableTriggerGroup('me_bhits', true)
+  Send("echo You receive Rune of Passage from Salkin.")
+  Send("echo Tester takes a deep breath, then leaves down a passage.")
+  Send("echo A small chamber")
+  Send("echo An Aura of Protective Magic begins floating around Grakkr.")
+  -- SendNoEcho("note read 269334")
+end
+
 function miniepics_test_boss(name, line, wc)
   env_area = 'titan'
   EnableTriggerGroup('me_titan', true)
@@ -388,28 +422,52 @@ end
 function titan_shy(name, line, wc)
   debugout('titan_shy() called, env_active is '..sb(env_active))
   if env_active then
-    writeout(logofy()..' @x214>@Y> @x227S@x228h@x229i@Wel@x229d@x228e@x227d @Y<@x214<', 2)
+    local addinfo = ''
+    if env_boss.id == 'orzbuk' then
+      if env_orzbuk[wc[1]] then
+        addinfo = ' @r(@R( @Y'..env_orzbuk[wc[1]].pos..'.'..env_orzbuk[wc[1]].alias..' @R)@r)'
+      end
+    end
+    writeout(logofy()..addinfo..' @x214>@Y> @x227S@x228h@x229i@Wel@x229d@x228e@x227d @Y<@x214<', 2)
   end
 end
 
 function titan_shn(name, line, wc)
   debugout('titan_shn() called, env_active is '..sb(env_active))
   if env_active then
-    writeout('@x022>@x034> @x046Shield destroyed @x034<@x022< @Ythanks '..sanitize(wc[1]), 3)
+    local addinfo = ''
+    if env_boss.id == 'orzbuk' then
+      if env_orzbuk[wc[2]] then
+        addinfo = ' @r(@R( @Y'..env_orzbuk[wc[2]].pos..'.'..env_orzbuk[wc[2]].alias..' @R)@r)'
+      end
+    end
+    writeout(addinfo..'@x022>@x034> @x046Shield destroyed @x034<@x022< @Ythanks '..sanitize(wc[1]), 3)
   end
 end
 
 function titan_shm(name, line, wc)
   debugout('titan_shm() called, env_active is '..sb(env_active))
   if env_active then
-    writeout('@x022>@x034> @x046Shield destroyed @x034<@x022<', 3)
+    local addinfo = ''
+    if env_boss.id == 'orzbuk' then
+      if env_orzbuk[wc[1]] then
+        addinfo = ' @r(@R( @Y'..env_orzbuk[wc[1]].pos..'.'..env_orzbuk[wc[1]].alias..' @R)@r)'
+      end
+    end
+    writeout(addinfo..'@x022>@x034> @x046Shield destroyed @x034<@x022<', 3)
   end
 end
 
 function titan_say(name, line, wc)
   debugout('titan_say() called, env_active is '..sb(env_active))
   if env_active then
-    writeout(logofy().." @x039>@C> @x051S@x087a@x159n@Wctu@x159a@x087r@x051y @C<@x039<", 2)
+    local addinfo = ''
+    if env_boss.id == 'orzbuk' then
+      if env_orzbuk[wc[1]] then
+        addinfo = ' @r(@R( @Y'..env_orzbuk[wc[1]].pos..'.'..env_orzbuk[wc[1]].alias..' @R)@r)'
+      end
+    end
+    writeout(logofy()..addinfo.." @x039>@C> @x051S@x087a@x159n@Wctu@x159a@x087r@x051y @C<@x039<", 2)
   end
 end
 
@@ -418,7 +476,13 @@ function titan_san(name, line, wc)
   if env_active then
     debugout('titan_san wc[1] is: '..wc[1]..' and it returns '..sb(indexof(bosstitan, wc[1])))
     if indexof(bosstitan, wc[1]) then
-      writeout('@x022>@x034> @x046Sanctuary dispelled @x034<@x022<', 3)
+      local addinfo = ''
+      if env_boss.id == 'orzbuk' then
+        if env_orzbuk[wc[1]] then
+          addinfo = ' @r(@R( @Y'..env_orzbuk[wc[1]].pos..'.'..env_orzbuk[wc[1]].alias..' @R)@r)'
+        end
+      end
+      writeout(addinfo..'@x022>@x034> @x046Sanctuary dispelled @x034<@x022<', 3)
     end
   end
 end
@@ -426,7 +490,13 @@ end
 function hit_warning(boss, always, spell)
   debugout('hit_warning() called, boss: '..boss..', always: '..always..', spell: '..spell)
     if env_active then
-      writeout(logofy()..' @r>@R> @x214'..spell..' @R<@r< @Yhit!', 3)
+      local addinfo = ''
+      if env_boss.id == 'orzbuk' then
+        if env_orzbuk[boss] then
+          addinfo = ' @r(@R( @Y'..env_orzbuk[boss].pos..'.'..env_orzbuk[boss].alias..' @R)@r)'
+        end
+      end
+      writeout(logofy()..addinfo..' @r>@R> @x214'..spell..' @R<@r< @Yhit!', 3)
     end
 end
 
@@ -452,9 +522,11 @@ function start_boss(area, boss)
   if sanitize(string.lower(boss)) ~= env_boss.id then env_bosscount = env_bosscount + 1 end
   time_start_boss = os.time()
   env_boss.id = sanitize(string.lower(boss))
+  debugout('start_boss() set env_boss.id to: '..env_boss.id)
   EnableTriggerGroup('me_start', false)
   EnableTriggerGroup(bossinfo[env_boss.id].name, true)
   EnableAlias(bossinfo[env_boss.id].name, true)
+  if env_boss.id == 'orzbuk' then fn_orzbuk('init') end
   -- if env_boss.id == 'grakkr' then EnableAlias(bossinfo[env_boss.id].name, true) end
   writeout(logofy()..' @W'..bossinfo[env_boss.id].short, 1)
   EnableAlias('miniexplain', true)
@@ -501,9 +573,32 @@ function fn_gjaka(s)
   -- upon reentering the room, check what's my current hp
 end
 
-function fn_grakkr(s)
+function fn_grakkr(s, w)
   if not s then s = 'nil' end
   debugout('fn_grakkr() called with argument: '..s)
+  if s == 'init' then
+    -- damage changed, output options
+    -- writeout(logofy().." @c[@Y1@c]@x045Cld@c|@x083Acd@c|@x253Bsh @c[@Y2@c]@x214Holy@c|@x027Shd@c|@MMent @c[@Y3@c]@x060Neg@c|@RFire@c|@WLig @c[@Y4@c]@x141Mag@c|@x205Nrg@c|@x094Earth @c[@Y5@c]@x253Pirc@c|@x045Air@c|@x195Elec @c[@Y6@c]@x039Wtr@c|@x253Slsh@c|@x159Son", 2)
+    writeout(logofy().." @c[@Y1@c]@x045Cold@c|@x083Acid@c|@x253Bash @c[@Y2@c]@x214Holy@c|@x027Shadow@c|@MMental @c[@Y3@c]@x060Negative@c|@RFire@c|@WLight @c[@Y4@c]@x141Magic@c|@x205Energy@c|@x094Earth@x094 @c[@Y5@c]@x253Pierce@c|@x045Air@c|@x195Electric @c[@Y6@c]@x039Water@c|@x253Slash@c|@x159Sonic", 2)
+  elseif s == 'report' then
+    -- output damage that we think is valid
+    if string.match(w, "cold") or string.match(w, "acid") or string.match(w, "bash") or string.match(w, "1") then
+      writeout(logofy().." @YUSE: @co-} @x045Cold @c{-o @c| @x083Acid @c| @x253Bash", 1)
+    elseif string.match(w, "holy") or string.match(w, "shado?w?") or string.match(w, "menta?l?") or string.match(w, "2") then
+      writeout(logofy().." @YUSE: @co-} @x214Holy @c{-o @c| @x027Shadow @c| @MMental", 1)
+    elseif string.match(w, "negat?i?v?e?") or string.match(w, "fire") or string.match(w, "light?") or string.match(w, "3") then
+      writeout(logofy().." @YUSE: @co-} @x060Negative @c{-o @c| @RFire @c| @WLight", 1)
+    elseif string.match(w, "magic") or string.match(w, "energ?y?") or string.match(w, "earth?") or string.match(w, "4") then
+      writeout(logofy().." @YUSE: @co-} @x141Magic @c{-o @c| @x205Energy @c| @x094Earth", 1)
+    elseif string.match(w, "pierc?e?") or string.match(w, "air") or string.match(w, "elect?r?i?c?") or string.match(w, "shock?") or string.match(w, "5") then
+      writeout(logofy().." @YUSE: @co-} @x253Pierce @c{-o @c| @x045Air @c| @x195Electric", 1)
+    elseif string.match(w, "water?") or string.match(w, "slash?") or string.match(w, "sonic?") or string.match(w, "6") then
+      writeout(logofy().." @YUSE: @co-} @x039Water @c{-o @c| @x253Slash @c| @x159Sonic", 1)
+    else
+      debugout('fn_grakkr() report argument "'..w..'" is not recognised, outputting help instead')
+      writeout(logofy().." @c[@Y1@c]@x045Cold@c|@x083Acid@c|@x253Bash @c[@Y2@c]@x214Holy@c|@x027Shadow@c|@MMental @c[@Y3@c]@x060Negative@c|@RFire@c|@WLight @c[@Y4@c]@x141Magic@c|@x205Energy@c|@x094Earth@x094 @c[@Y5@c]@x253Pierce@c|@x045Air@c|@x195Electric @c[@Y6@c]@x039Water@c|@x253Slash@c|@x159Sonic", 2)
+    end
+  end
   -- check damage, report which to switch
   -- report aura change
 end
@@ -545,9 +640,98 @@ end
 function fn_orzbuk(s)
   if not s then s = 'nil' end
   debugout('fn_orzbuk() called with argument: '..s)
-  -- look or study can populate name substitution - 1.orz, 2.orz, 3.orz, 4.orz (if one dies first)
-  -- study can report mob hp percentage
-  -- look can report who is tanking
+  if s == 'init' then
+    env_orzbuk = {
+      ["Orzbuk's right leg"] = { alias = "gen", pos = 1, target = nil },
+      ["Orzbuk's left leg"]  = { alias = "gen", pos = 2, target = nil },
+      ["Orzbuk's right arm"] = { alias = "gen", pos = 3, target = nil },
+      ["Orzbuk's left arm"]  = { alias = "gen", pos = 4, target = nil }
+    }
+  elseif s == 'catch' then
+    wait.make(function()
+      local x = wait.regexp(".+Exits. none.+", 10)
+      if not x then debugout('fn_orzbuk(catch) - nothing received in 10 sec') return end
+      local pos = 1
+      local result = {}
+      local tanks = {}
+      local totaltanks = 0
+      local me = gmcp('char.base.name')
+      while true do
+        local line, wc, styles = wait.match("*")
+        if line == "" or not line then break end
+        local a,b = string.match(line, "^.+%) (.+) is fighting (.+)%.$")
+        if a and b then if env_orzbuk[a] then
+          result[a] = { alias = "gen", pos = pos, target = b }
+          if not tanks[b] then
+            tanks[b] = 1
+            totaltanks = totaltanks + 1
+          else
+            tanks[b] = tanks[b] + 1
+          end
+          pos = pos + 1
+        end end
+        local c = string.match(line, "^.+%) (.+) is trying to KILL YOU!$")
+        if c then if env_orzbuk[c] then
+          result[c] = { alias = "gen", pos = pos, target = me }
+          if not tanks[me] then
+            tanks[me] = 1
+            totaltanks = totaltanks + 1
+          else
+            tanks[me] = tanks[me] + 1
+          end
+          pos = pos + 1
+        end end
+      end
+      if totaltanks > 0 then
+        env_orzbuk = result
+        -- @YTANKS: @r[@G1@r]@wDomen, @r[@Y2@r]@wKalista, @r[@R4@r]@wBlueFeather
+        local output = " @YTANKS: "
+        local separator = ", "
+        local colors = {"@G", "@Y", "@R", "@R"}
+        local i = 1
+        for k,v in pairs(tanks) do
+          if i == totaltanks then separator = "" end
+          output = output.."@r["..colors[v]..v.."@r]@w"..k..separator
+          i = i + 1
+        end
+        writeout(logofy()..output, 2)
+      end
+    end)
+  elseif s == 'report' then
+    wait.make(function()
+      SendNoEcho('study')
+      local x = wait.match("You quickly evaluate the health of all present.", 10)
+      if not x then debugout('fn_orzbuk(catch) - nothing received in 10 sec') return end
+      local result = {}
+      local pos = 1
+      while true do
+        local line, wc, styles = wait.match("*")
+        if line == "" or not line then break end -- escape while loop condition
+        for i,v in ipairs(study_patterns) do
+          if v.val ~= "me" then
+            local p = string.match(line, v.match)
+            if p then
+              if env_orzbuk[p] then
+                result[p] = { pos = pos, hp = v.avg, alias = env_orzbuk[p].alias, target = env_orzbuk[p].target }
+                pos = pos + 1
+              end
+            end
+          end
+        end
+      end
+      -- @YSTUDY: @w1.general@r[@Y100%@r] @w2.general@r[@Y90%@r] @w3.general@r[@Y97%@r]
+      local output = " @YSTUDY: "
+      local separator = " "
+      pos = pos - 1 -- rewind one back
+      local i = 1
+      for k,v in pairs(result) do
+        if i == pos then separator = "" end
+        output = output.."@w"..v.pos.."."..v.alias.."@r[@Y"..v.hp.."%@r]"..separator
+        i = i + 1
+      end
+      writeout(logofy()..output, 1)
+    end)
+  end
 end
 
 function fn_rograg(s)
