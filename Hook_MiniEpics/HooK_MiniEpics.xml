@@ -49,7 +49,7 @@ A collection of triggers for use in Titan and Terra miniepics - to make life the
   <!-- Run start and end -->
   <trigger match="^You receive Rune of Passage from Salkin\.$"            regexp="y" enabled="n" group="me_titan" sequence="99" script="start_area"></trigger>
   <trigger match="^You receive Salkin's Reward from Salkin\.$"            regexp="y" enabled="n" group="me_titan" sequence="99" script="end_area"></trigger>
-  <trigger match="^.+ takes a deep breath, then leaves down a passage\.$" regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>EnableTriggerGroup('me_start', true)</send></trigger>
+  <trigger match="^Salkin snaps his fingers; your rune glows faintly!$"   regexp="y" enabled="n" group="me_titan" sequence="99" send_to="12"><send>EnableTriggerGroup('me_start', true)</send></trigger>
   <!-- Boss start -->
   <trigger match="^At the edge of the Abyss$" regexp="y" enabled="n" group="me_start" sequence="80" send_to="12"><send>start_boss('titan','Durthar')</send></trigger>
   <trigger match="^Shattered reality$"        regexp="y" enabled="n" group="me_start" sequence="80" send_to="12"><send>start_boss('titan','Gjaka')</send></trigger>
@@ -923,6 +923,7 @@ function miniepics_badcommand()
 end
 
 function OnPluginInstall()
+  -- TODO - add check if we needed to reload during a run
   AnsiNote(logo..ColoursToANSI('@w type @Yminiepics help @wfor commands and usage info.'))
 end
 
