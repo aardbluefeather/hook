@@ -10,7 +10,7 @@
    save_state="y"
    date_written="2019-06-26 21:47:01"
    requires="5.06"
-   version="0.8"
+   version="0.81"
    >
 <description trim="y">
 <![CDATA[
@@ -192,7 +192,7 @@ require "gmcphelper"
 require "serialize"
 require "wait"
 dofile(GetPluginInfo(GetPluginID(),20).."aardwolf_colors.lua")
-local logo = ColoursToANSI('@Co-}@YHooK@C{-o  @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C8')
+local logo = ColoursToANSI('@Co-}@YHooK@C{-o @x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs @cv@C0@c.@C81')
 local logoshort = ColoursToANSI('@Y[@x051M@x044i@x037n@x030i@x051E@x044p@x037i@x030cs@Y]')
 local env_active = gb(GetVariable('env_active')) or true
 local env_debug = gb(GetVariable('env_debug')) or false
@@ -422,6 +422,7 @@ end
 function titan_shy(name, line, wc)
   debugout('titan_shy() called, env_active is '..sb(env_active))
   if env_active then
+    if not env_boss then return end
     local addinfo = ''
     if env_boss.id == 'orzbuk' then
       if env_orzbuk[wc[1]] then
@@ -435,6 +436,7 @@ end
 function titan_shn(name, line, wc)
   debugout('titan_shn() called, env_active is '..sb(env_active))
   if env_active then
+    if not env_boss then return end
     local addinfo = ''
     if env_boss.id == 'orzbuk' then
       if env_orzbuk[wc[2]] then
@@ -448,6 +450,7 @@ end
 function titan_shm(name, line, wc)
   debugout('titan_shm() called, env_active is '..sb(env_active))
   if env_active then
+    if not env_boss then return end
     local addinfo = ''
     if env_boss.id == 'orzbuk' then
       if env_orzbuk[wc[1]] then
@@ -461,6 +464,7 @@ end
 function titan_say(name, line, wc)
   debugout('titan_say() called, env_active is '..sb(env_active))
   if env_active then
+    if not env_boss then return end
     local addinfo = ''
     if env_boss.id == 'orzbuk' then
       if env_orzbuk[wc[1]] then
@@ -474,6 +478,7 @@ end
 function titan_san(name, line, wc)
   debugout('titan_san() called, env_active is '..sb(env_active))
   if env_active then
+    if not env_boss then return end
     debugout('titan_san wc[1] is: '..wc[1]..' and it returns '..sb(indexof(bosstitan, wc[1])))
     if indexof(bosstitan, wc[1]) then
       local addinfo = ''
@@ -490,6 +495,7 @@ end
 function hit_warning(boss, always, spell)
   debugout('hit_warning() called, boss: '..boss..', always: '..always..', spell: '..spell)
     if env_active then
+      if not env_boss then return end
       local addinfo = ''
       if env_boss.id == 'orzbuk' then
         if env_orzbuk[boss] then

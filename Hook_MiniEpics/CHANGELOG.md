@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this plugin will be documented in this file.
 
+## v0.81 - 2020-06-02
+- some minor bugfixes that were causing errors
+
 ## v0.8 - 2020-05-17
 - Orzbuk boss (look to report tanks, **rep***ort* command)
 - Grakkr boss (**rep***ort* ***damtype*** command)
