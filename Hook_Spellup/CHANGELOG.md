@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this plugin will be documented in this file.
 
+## v1.6 - 2020-12-10
+- BUGFIX: Gaia's Focus should work now
+
 ## v1.5 - 2020-12-10
 - only wake/stand/return from AFK to spellup if in manor zone
 - better handling of sanctuary

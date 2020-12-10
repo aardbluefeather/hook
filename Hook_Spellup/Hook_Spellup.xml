@@ -14,7 +14,7 @@
    >
 <description trim="y">
 <![CDATA[
-Hook_Spellup v1.5 loaded.
+Hook_Spellup v1.6 loaded.
 ]]>
 </description>
 
@@ -176,7 +176,7 @@ local c_magenta = ANSI(35)
 local c_cyan = ANSI(36)
 local c_white = ANSI(37)
 -- set script name for later use
-local logo = ColoursToANSI('@Co-}@YHooK@C{-o @Y[@x051Au@x044t@x037oS@x030p@x037el@x044l@x051up@Y] @cv@C1@c.@C5')
+local logo = ColoursToANSI('@Co-}@YHooK@C{-o @Y[@x051Au@x044t@x037oS@x030p@x037el@x044l@x051up@Y] @cv@C1@c.@C6')
 local logoshort = ColoursToANSI('@Y[@x051Au@x044t@x037oS@x030p@x037el@x044l@x051up@Y]')
 
 -------------------
@@ -438,6 +438,10 @@ function give_spellup()
     env_spellup = true
     env_cskill = true
     env_init = true
+    if gmcp('char.base.subclass') == 'Shaman' then
+      env_gaias_focus = true
+      env_gaias_revenge = true
+    end
     if env_active then EnableTriggerGroup('spellup', true) end
     if env_active2 then EnableTriggerGroup('sanc', true) end
     if env_active3 then EnableTriggerGroup('warning', true) end
@@ -479,7 +483,7 @@ end
 function check_gaias_focus()
   if gmcp('char.base.subclass') ~= 'Shaman' then return end
   debugout('Checking if I need to cast gaias focus')
-  if not env_gaias_focus and not env_gaias_revenge then
+  if env_gaias_focus and env_gaias_revenge then
     debugout('Trying to cast gaias focus before spellup')
     SendNoEcho('c 552 '..env_gaias_damtype)
   end
