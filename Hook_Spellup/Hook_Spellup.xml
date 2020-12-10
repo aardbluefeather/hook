@@ -10,11 +10,11 @@
    save_state="y"
    date_written="2019-04-14 14:59:37"
    requires="5.06"
-   version="1.4"
+   version="1.5"
    >
 <description trim="y">
 <![CDATA[
-Hook_Spellup v1.4 loaded.
+Hook_Spellup v1.5 loaded.
 ]]>
 </description>
 
@@ -33,9 +33,9 @@ Hook_Spellup v1.4 loaded.
   <trigger match="You are surrounded by a shimmering white aura of divine protection."         enabled="n" keep_evaluating="n" group="sanc"    send_to="12" sequence="100"><send>env_sanc = false</send></trigger>
   <trigger match="You are already in sanctuary."                                               enabled="n" keep_evaluating="n" group="sanc"    send_to="12" sequence="100"><send>env_sanc = false</send></trigger>
   <!-- insta cast spells -->
-  <trigger match="You no longer move at the speed of light."                                   enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>Execute('c 259')</send></trigger>
+  <trigger match="You no longer move at the speed of light."                                   enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>SendNoEcho('c 259')</send></trigger>
   <trigger match="You feel yourself slow down."                                                enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>SendNoEcho('spellup')</send></trigger>
-  <trigger match="You are no longer able to breathe underwater."                               enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>Execute('c 333')</send></trigger>
+  <trigger match="You are no longer able to breathe underwater."                               enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>SendNoEcho('c 333')</send></trigger>
   <!-- spellup complete -->
   <trigger match="You decide to go on a serious bender. Suddenly you feel very lucky."         enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>env_cskill = false</send></trigger>
   <trigger match="You're drunk enough... Sober up first!"                                      enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>env_cskill = false</send></trigger>
@@ -43,6 +43,10 @@ Hook_Spellup v1.4 loaded.
   <trigger match="You can't concentrate enough to cast *"                                      enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>check_spells_combat()</send></trigger>
   <trigger match="Queueing spell : *."                                                         enabled="n" keep_evaluating="n" omit_from_output="y" name="queue_spell" group="spellup" send_to="12" sequence="100" script="queue_spells"></trigger>
   <trigger match="Queueing skill : *."                                                         enabled="n" keep_evaluating="n" omit_from_output="y" name="queue_skill" group="spellup" send_to="12" sequence="100" script="queue_spells"></trigger>
+  <trigger match="You focus Gaia's revenge into * based attacks."                              enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>env_gaias_focus = false</send></trigger>
+  <trigger match="You are blessed with Gaia's revenge."                                        enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>env_gaias_revenge = false</send></trigger>
+  <trigger match="You must focus your * attacks before seeking Gaia's revenge."                enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>env_gaias_focus = false; env_gaias_revenge = false</send></trigger>
+  <trigger match="You already have Gaia's assistance."                                         enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>env_gaias_focus = false</send></trigger>
   <!-- need spellup -->
   <trigger match="You lost your concentration while trying to cast *"                          enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>failed_spell()</send></trigger>
   <trigger match="Your head starts to pound as you sober up."                                  enabled="n" keep_evaluating="n" group="spellup" send_to="12" sequence="100"><send>need_cskill()</send></trigger>
@@ -118,6 +122,8 @@ Hook_Spellup v1.4 loaded.
   <trigger match="You slowly float to the ground."                                             enabled="n" keep_evaluating="n" omit_from_output="y" name="fly"                      group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
   <trigger match="You return to the living world."                                             enabled="n" keep_evaluating="n" omit_from_output="y" name="wraith_form"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
   <trigger match="## You may now use projection abilities."                                    enabled="n" keep_evaluating="n" omit_from_output="y" name="power_projection"         group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You lose your control over Gaia's Focus."                                    enabled="n" keep_evaluating="n" omit_from_output="y" name="gaias_focus"              group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
+  <trigger match="You are no longer blessed with Gaia's Revenge."                              enabled="n" keep_evaluating="n" omit_from_output="y" name="gaias_revenge"            group="spellup" send_to="12" sequence="100" script="need_spells"></trigger>
   <!-- warn about afflix and pvp -->
   <trigger match="You are trapped in an invisible web!"                                        enabled="n" keep_evaluating="n" group="warning" send_to="12" sequence="100"><send>issue_warning('web1', '')</send></trigger>
   <trigger match="You start to feel unlucky."                                                  enabled="n" keep_evaluating="n" group="warning" send_to="12" sequence="100"><send>issue_warning('curse', '')</send></trigger>
@@ -138,9 +144,9 @@ Hook_Spellup v1.4 loaded.
   <alias match="^ss warn$" regexp="y" enabled="y" send_to="12" sequence="100"><send>toggle_warning()</send></alias>
   <alias match="^ss debug$" regexp="y" enabled="y" send_to="12" sequence="100"><send>toggle_debug()</send></alias>
   <alias match="^ss warn (.*)$" regexp="y" enabled="y" send_to="12" sequence="100"><send>setup_warning('%1')</send></alias>
-  <alias match="^ss sanc reset$" regexp="y" enabled="y" send_to="12" sequence="100"><send>env_sanc = true;env_sanc_m = false;sanc_reset()</send></alias>
   <alias match="^ss help$" regexp="y" enabled="y" send_to="12" sequence="100"><send>autospellup_help()</send></alias>
   <alias match="^ss (aura1|aura2|bag1|bag2) (\d+)$" regexp="y" enabled="y" send_to="12" sequence="100"><send>setup_autosanc('%1', '%2')</send></alias>
+  <alias match="^ss gaia (air|earth|electric|cold|water)$" regexp="y" enabled="y" send_to="12" sequence="100"><send>gaias_change_damtype('%1')</send></alias>
 </aliases>
 
 <!--  Script  -->
@@ -170,7 +176,7 @@ local c_magenta = ANSI(35)
 local c_cyan = ANSI(36)
 local c_white = ANSI(37)
 -- set script name for later use
-local logo = ColoursToANSI('@Co-}@YHooK@C{-o @Y[@x051Au@x044t@x037oS@x030p@x037el@x044l@x051up@Y] @cv@C1@c.@C4')
+local logo = ColoursToANSI('@Co-}@YHooK@C{-o @Y[@x051Au@x044t@x037oS@x030p@x037el@x044l@x051up@Y] @cv@C1@c.@C5')
 local logoshort = ColoursToANSI('@Y[@x051Au@x044t@x037oS@x030p@x037el@x044l@x051up@Y]')
 
 -------------------
@@ -195,23 +201,30 @@ end
 -----------------
 -- Default values
 -----------------
-env_active  = gb(GetVariable('env_active')) or false -- is autocasting active? No by default, save choice across sessions
-env_active2 = gb(GetVariable('env_active2')) or false -- is auto sanctuary monitoring active? No by default, save choice across sessions
-env_active3 = gb(GetVariable('env_active3')) or false -- is warning report active? No by default, save choice across sessions
-env_debug   = gb(GetVariable('env_debug')) or false -- debug output, to keep track on what's triggered when
-env_init    = false -- has plugin been initialized (synced with server)
-env_sanc    = false -- do we need sanctuary?
-env_sanc_m  = false -- do we need to manually reset sanctuary?
-env_cskill  = false -- do we need clan skill recast?
-env_spellup = false -- do we need spellup?
-env_casting = false -- is spellup already been cast? (sometimes we can spam too much, make sure we don't)
-sanc_aura1  = GetVariable('sanc_aura1') or '1' -- clan or some other aura
-sanc_aura2  = GetVariable('sanc_aura2') or '2' -- aura that gives sanctuary
-sanc_bag1   = GetVariable('sanc_bag1') or '1' -- container for aura1
-sanc_bag2   = GetVariable('sanc_bag2') or '2' -- container for aura2
-warn_chan   = GetVariable('warn_chan') or 'gt' -- default channel for warnings
-player_stat = '1' -- gmcp('char.status.state')
-env_gag     = false -- dial down the spam from the screen if needed
+env_active         = gb(GetVariable('env_active')) or false -- is autocasting active? No by default, save choice across sessions
+env_active2        = gb(GetVariable('env_active2')) or false -- is auto sanctuary monitoring active? No by default, save choice across sessions
+env_active3        = gb(GetVariable('env_active3')) or false -- is warning report active? No by default, save choice across sessions
+env_debug          = gb(GetVariable('env_debug')) or false -- debug output, to keep track on what's triggered when
+env_init           = false -- has plugin been initialized (synced with server)
+env_sanc           = false -- do we need sanctuary?
+env_sanc_aura      = false -- do we need to reset from aura to spell?
+env_sanc_aura_lock = gb(GetVariable('env_sanc_aura_lock')) or false -- are we forcing the use of sanc aura?
+env_sanc_queue     = false -- do we need sanctuary after strangle or sleep/sitting?
+env_sanc_queue2    = false -- do we need to juggle sanc aura after sleep or something?
+env_sanc_m         = false -- do we need to manually reset sanctuary?
+env_cskill         = false -- do we need clan skill recast?
+env_spellup        = false -- do we need spellup?
+env_casting        = false -- is spellup already been cast? (sometimes we can spam too much, make sure we don't)
+env_gaias_focus    = false -- do we need gaias focus?
+env_gaias_damtype  = GetVariable('env_gaias_damtype') or 'earth'
+env_gaias_revenge  = false -- do we need gaias revenge?
+sanc_aura1         = GetVariable('sanc_aura1') or '1' -- clan or some other aura
+sanc_aura2         = GetVariable('sanc_aura2') or '2' -- aura that gives sanctuary
+sanc_bag1          = GetVariable('sanc_bag1') or '1' -- container for aura1
+sanc_bag2          = GetVariable('sanc_bag2') or '2' -- container for aura2
+warn_chan          = GetVariable('warn_chan') or 'gt' -- default channel for warnings
+player_stat        = '1' -- gmcp('char.status.state')
+env_gag            = false -- dial down the spam from the screen if needed
 
 ------------------------
 -- Main trigger function
@@ -243,6 +256,8 @@ function OnPluginBroadcast(msg, id, name, text)
               env_init = false
               give_spellup()
             end
+          elseif gmcp('char.status.state') == '8' then
+            if env_sanc or env_sanc_queue then give_spellup() end
           end
           player_stat = gmcp('char.status.state')
         end
@@ -289,76 +304,104 @@ function OnPluginBroadcast(msg, id, name, text)
   end
 end
 
---------------------
--- Autospellup alias
---------------------
+------------------
+-- Alias functions
+------------------
 function toggle_spellup()
   if env_active then
     env_active = false
-    SetVariable('env_active', sb(env_active))
     EnableTriggerGroup('spellup', false)
     AnsiNote(logoshort..ColoursToANSI('@w script turned @ROFF'))
   else
     env_init = false
     env_active = true
-    SetVariable('env_active', sb(env_active))
     EnableTriggerGroup('spellup', true)
     AnsiNote(logoshort..ColoursToANSI('@w script turned @GON'))
   end
+  SaveState()
 end
 
 function toggle_sanctuary()
-  if env_active2 then
-    env_active2 = false
-    SetVariable('env_active2', sb(env_active2))
-    EnableTriggerGroup('sanc', false)
-    AnsiNote(logoshort..ColoursToANSI('@w sanctuary watching turned @ROFF'))
+  if env_sanc_aura_lock then
+    AnsiNote(logoshort..ColoursToANSI('@w sanc aura lock turned @GOFF'))
+    sanc_aura_unlock()
   else
-    env_active2 = true
-    SetVariable('env_active2', sb(env_active2))
-    EnableTriggerGroup('sanc', true)
-    AnsiNote(logoshort..ColoursToANSI('@w sanctuary watching turned @GON'))
+    AnsiNote(logoshort..ColoursToANSI('@w sanc aura lock turned @RON'))
+    sanc_aura_lock()
   end
 end
 
 function toggle_warning()
   if env_active3 then
     env_active3 = false
-    SetVariable('env_active3', sb(env_active3))
     EnableTriggerGroup('warning', false)
     AnsiNote(logoshort..ColoursToANSI('@w sanctuary watching turned @ROFF'))
   else
     env_active3 = true
-    SetVariable('env_active3', sb(env_active3))
     EnableTriggerGroup('warning', true)
     AnsiNote(logoshort..ColoursToANSI('@w sanctuary watching turned @GON'))
   end
+  SaveState()
 end
 
 function toggle_debug()
   if env_debug then
     env_debug = false
-    SetVariable('env_debug', sb(env_debug))
     AnsiNote(logoshort..ColoursToANSI('@w debug output turned @ROFF'))
   else
     env_debug = true
-    SetVariable('env_debug', sb(env_debug))
     AnsiNote(logoshort..ColoursToANSI('@w debug output turned @GON'))
   end
+  SaveState()
 end
 
---------------------
--- Autospellup alias
---------------------
+function gaias_change_damtype(dam)
+  env_gaias_damtype = dam
+  AnsiNote(logoshort..ColoursToANSI('@w gaias focus damtype changed to @W'..dam))
+  SaveState()
+end
+
+function setup_autosanc(i, j)
+  if i == 'aura1' then
+    sanc_aura1 = j
+    AnsiNote(logoshort..ColoursToANSI('@w sanc_aura1 set to: @G'..sanc_aura1))
+  elseif i == 'aura2' then
+    sanc_aura2 = j
+    AnsiNote(logoshort..ColoursToANSI('@w sanc_aura2 set to: @G'..sanc_aura2))
+  elseif i == 'bag1' then
+    sanc_bag1 = j
+    AnsiNote(logoshort..ColoursToANSI('@w sanc_bag1 set to: @G'..sanc_bag1))
+  elseif i == 'bag2' then
+    sanc_bag2 = j
+    AnsiNote(logoshort..ColoursToANSI('@w sanc_bag2 set to: @G'..sanc_bag2))
+  end
+  SaveState()
+end
+
+function setup_warning(c)
+  if c == 'gt' or c == 'ct' or c == 'repl' or c == 'say' or c == 'spouse' or c == 'local' then
+    warn_chan = c
+    AnsiNote(logoshort..ColoursToANSI('@w channel set to: @Y'..warn_chan))
+  else
+    AnsiNote(logoshort..ColoursToANSI('@w accepted arguments are: @Ygt@w, @Yct@w, @Yrepl@w, @Ysay@w, @Yspouse@w, @Ylocal@w.'))
+  end
+  SaveState()
+end
+----------------------
+-- Autospellup routine
+----------------------
 function need_spells(name, line, wc)
   -- name = splp08
   -- line = Your moral standing is no longer cloaked.
-  -- wc = { [0] = "Your moral standing is no longer cloaked." } 
+  -- wc = { [0] = "Your moral standing is no longer cloaked." }
+  if not env_gag then writeout(line) end
+  if name == 'gaias_focus' then env_gaias_focus = true return end
+  if name == 'gaias_revenge' then env_gaias_revenge = true end
+
   if not env_spellup then
     env_spellup = true
     if gmcp('char.status.state') == '3' then debugout('Need spells trigger - Out of Combat -> give_spellup()') give_spellup() end
   end
-  if not env_gag then writeout(line) end
   debugout(name:gsub('_',' ')..' @w--> @roff!')
 end
 
@@ -385,10 +428,12 @@ function check_spells_combat() -- If we get "No spells or skills cast." while in
   end
 end
 
-------------------------
--- Main spellup function
-------------------------
+-----------------------
+-- Main spellup routine
+-----------------------
 function give_spellup()
+  if not env_active then return end
+
   if not env_init then -- only on first start/reload
     env_spellup = true
     env_cskill = true
@@ -397,91 +442,148 @@ function give_spellup()
     if env_active2 then EnableTriggerGroup('sanc', true) end
     if env_active3 then EnableTriggerGroup('warning', true) end
   end
-  local char_state = false
-  if gmcp('char.status.state') == '3' then char_state = 3 end -- Fully active and able to receive MUD commands
-  if gmcp('char.status.state') == '4' then char_state = 4 end -- AFK
-  -- if gmcp('char.status.state') == '5' then char_state = 5 end -- in Note
-  -- if gmcp('char.status.state') == '6' then char_state = 6 end -- in Building/Edit mode
-  -- if gmcp('char.status.state') == '7' then char_state = 7 end -- at paged output prompt
-  -- if gmcp('char.status.state') == '8' then char_state = 8 end -- in combat
-  if gmcp('char.status.state') == '9' then char_state = 9 end -- sleeping
-  if gmcp('char.status.state') == '11' then char_state = 11 end -- resting or sitting
-  -- if gmcp('char.status.state') == '12' then char_state = 12 end -- running
-  -- if not char_state then debugout('Autospellup debug: '..gmcp('char.status.state'))
-  if env_active or env_spellup or env_cskill or char_state then
-    if not env_casting then
-      if char_state and char_state == 4 and (env_cskill or env_spellup) then debugout('--> afk') SendNoEcho('afk') end
-      if char_state and char_state > 4 and (env_cskill or env_spellup) then debugout('--> stand') SendNoEcho('stand') end
-      if env_cskill then debugout('--> stupor') SendNoEcho('stupor') end
-      if env_spellup then debugout('--> spellup') SendNoEcho('spellup') end
-      if char_state == 4 and (env_cskill or env_spellup) then debugout('--> afk') SendNoEcho('afk') end
-      if char_state == 9 and (env_cskill or env_spellup) then debugout('--> sleep') SendNoEcho('sleep') end
-      if char_state == 11 and (env_cskill or env_spellup) then debugout('--> rest') SendNoEcho('rest') end
-      if env_cskill or env_spellup then env_casting = true; DoAfterSpecial(2,"env_casting = false",12) end
-    end
+
+  if env_casting then return end -- don't trigger too often!
+  if env_sanc_queue then env_sanc_queue = false; sanc_lost() end -- we couldn't handle sanc before, try again!
+  if env_sanc_queue2 then env_sanc_queue2 = false; sanc_aura_juggle() end -- we couldn't juggle sanc aura before, try again!
+  check_gaias_focus() -- Shaman specific spell
+  if not env_cskill and not env_spellup then return end -- there's nothing to do, exit
+
+  if gmcp('char.status.state') == '3' then -- fully active and able to receive MUD commands
+    if env_cskill then debugout('--> stupor') SendNoEcho('stupor') end
+    if env_spellup then debugout('--> spellup') SendNoEcho('spellup') end
+    if env_cskill or env_spellup then env_casting = true; DoAfterSpecial(2,"env_casting = false",12) end
+    return
+  end
+
+  if zone_is_safe() then
+    local char_state = false
+    if gmcp('char.status.state') == '4' then char_state = 4 end -- AFK
+    if gmcp('char.status.state') == '9' then char_state = 9 end -- sleeping
+    if gmcp('char.status.state') == '11' then char_state = 11 end -- resting or sitting
+    if not char_state then return end -- ignore undefined states
+
+    if char_state == 4 then debugout('--> afk') SendNoEcho('afk') end
+    if char_state > 4 then debugout('--> stand') SendNoEcho('stand') end
+
+    if env_cskill then debugout('--> stupor') SendNoEcho('stupor') end
+    if env_spellup then debugout('--> spellup') SendNoEcho('spellup') end
+
+    if char_state == 4 then debugout('--> afk') SendNoEcho('afk') end
+    if char_state == 9 then debugout('--> sleep') SendNoEcho('sleep') end
+    if char_state == 11 then debugout('--> rest') SendNoEcho('rest') end
+    if env_cskill or env_spellup then env_casting = true; DoAfterSpecial(2,"env_casting = false",12) end
   end
 end
 
+function check_gaias_focus()
+  if gmcp('char.base.subclass') ~= 'Shaman' then return end
+  debugout('Checking if I need to cast gaias focus')
+  if not env_gaias_focus and not env_gaias_revenge then
+    debugout('Trying to cast gaias focus before spellup')
+    SendNoEcho('c 552 '..env_gaias_damtype)
+  end
+end
+
+function zone_is_safe()
+  debugout('Checking if zone is safe')
+  local zone_list = {'manormount', 'manorwoods', 'manorville', 'manorsea', 'manor1', 'manorisle', 'manor3'}
+  for _, v in ipairs(zone_list) do
+    if v == gmcp('room.info.zone') then debugout(v..' zone detected as safe!'); return true end
+  end
+  return false
+end
+
 function sanc_lost()
-  if gmcp('char.status.state') == '8' or env_sanc_m then
-    env_sanc = true
-    if (sanc_bag2 ~= '0') then SendNoEcho('get '..sanc_aura2..' '..sanc_bag2) end -- disable if bag2 == 0
-    SendNoEcho('wear '..sanc_aura2)
-    if (sanc_bag1 ~= '0') then SendNoEcho('put '..sanc_aura1..' '..sanc_bag1) end -- disable if bag1 == 0
+  if env_sanc_aura then debugout('Sanc is lost - already wearing aura'); return end
+  
+  env_sanc = true
+  if gmcp('char.status.state') == '8' then
+    debugout('Sanc is lost - In Combat -> sanc_aura_on()')
+    return sanc_aura_on()
+  end
+
+  if gmcp('char.status.state') == '3' then
+    debugout('Sanc is lost - Out of Combat -> cast sanc')
+    SendNoEcho('c 71')
+    DoAfterSpecial(6,"check_sanc()",12) -- check if we are in sanc after 6 sec
   else
-    env_sanc = true
-    Execute('c 71')
-    DoAfterSpecial(6,"check_sanc()",12) -- check if we are in sanc after 2 sec
+    env_spellup = true
+    env_sanc_queue = true
   end
 end
 
 function sanc_reset()
-  if env_sanc and not env_sanc_m then
-    if gmcp('char.status.state') == '3' then
-      if (sanc_bag1 ~= '0') then SendNoEcho('get '..sanc_aura1..' '..sanc_bag1) end -- disable if bag1 == 0
-      SendNoEcho('wear '..sanc_aura1) -- switch back the aura
-      SendNoEcho('c 71') -- cast sanctuary
-      if (sanc_bag2 ~= '0') then SendNoEcho('put '..sanc_aura2..' '..sanc_bag2) end -- disable if bag2 == 0
-      -- env_sanc will be set off with trigger because this may fail if we are stunned!
-      DoAfterSpecial(6,"check_sanc()",12) -- check if we are in sanc after 2 sec
-    end
+  if env_sanc_aura_lock then return end
+  if env_sanc_aura then debugout('After combat trigger -> sanc_aura_off()'); sanc_aura_off() end
+end
+
+function sanc_aura_lock()
+  env_sanc_aura_lock = true
+  if not env_sanc_aura then
+    sanc_aura_on()
+  else
+    env_sanc_queue2 = false
   end
+  SaveState()
+end
+
+function sanc_aura_unlock()
+  env_sanc_aura_lock = false
+  if env_sanc_aura then
+    sanc_aura_off()
+  else
+    env_sanc_queue2 = false
+  end
+  SaveState()
 end
 
 function check_sanc()
-  if env_sanc and not env_sanc_m then
-    env_sanc_m = true
+  debugout('Checking if sanc landed')
+  if env_sanc and not env_sanc_aura then
     AnsiNote(ColoursToANSI('@C{-o @Y---------------@C[  ')..logo..ColoursToANSI('  @C]@Y--------------- @Co-}@w'))
     AnsiNote()
     AnsiNote(ColoursToANSI('  @CNotice:'))
-    AnsiNote(ColoursToANSI('    @wUnable to cast sanctuary, you can do it later manually:'))
-    AnsiNote(ColoursToANSI('    @w - @Yss sanc reset'))
+    AnsiNote(ColoursToANSI('    @wUnable to cast sanctuary, force wearing sanc aura:'))
+    AnsiNote(ColoursToANSI('    @w - @Yss sanc'))
     AnsiNote()
     AnsiNote(ColoursToANSI('@C{-o @Y----------------------------------------------------------------- @Co-}@w'))
-    sanc_lost()
+    sanc_aura_lock()
   end
 end
 
-function setup_autosanc(i, j)
-  if i == 'aura1' then
-    sanc_aura1 = j
-    SetVariable('sanc_aura1', sanc_aura1)
-    AnsiNote(logoshort..ColoursToANSI('@w sanc_aura1 set to: @G'..sanc_aura1))
-  elseif i == 'aura2' then
-    sanc_aura2 = j
-    SetVariable('sanc_aura2', sanc_aura2)
-    AnsiNote(logoshort..ColoursToANSI('@w sanc_aura2 set to: @G'..sanc_aura2))
-  elseif i == 'bag1' then
-    sanc_bag1 = j
-    SetVariable('sanc_bag1', sanc_bag1)
-    AnsiNote(logoshort..ColoursToANSI('@w sanc_bag1 set to: @G'..sanc_bag1))
-  elseif i == 'bag2' then
-    sanc_bag2 = j
-    SetVariable('sanc_bag2', sanc_bag2)
-    AnsiNote(logoshort..ColoursToANSI('@w sanc_bag2 set to: @G'..sanc_bag2))
+function sanc_aura_juggle()
+  if env_sanc_aura then
+    sanc_aura_off()
+  else
+    sanc_aura_on()
   end
 end
 
+function sanc_aura_on()
+  if gmcp('char.status.state') == '3' or gmcp('char.status.state') == '8' or gmcp('char.status.state') == '11' then
+    if (sanc_bag2 ~= '0') then SendNoEcho('get '..sanc_aura2..' '..sanc_bag2) end -- disable if bag2 == 0
+    SendNoEcho('wear '..sanc_aura2)
+    if (sanc_bag1 ~= '0') then SendNoEcho('put '..sanc_aura1..' '..sanc_bag1) end -- disable if bag1 == 0
+    env_sanc_aura = true
+  else
+    env_sanc_queue2 = true
+  end
+end
+
+function sanc_aura_off()
+  if gmcp('char.status.state') == '3' or gmcp('char.status.state') == '11' then
+    if (sanc_bag1 ~= '0') then SendNoEcho('get '..sanc_aura1..' '..sanc_bag1) end -- disable if bag1 == 0
+    SendNoEcho('wear '..sanc_aura1) -- switch back the aura
+    SendNoEcho('c 71') -- cast sanctuary
+    if (sanc_bag2 ~= '0') then SendNoEcho('put '..sanc_aura2..' '..sanc_bag2) end -- disable if bag2 == 0
+    -- env_sanc will be set off with trigger because this may fail if we are stunned!
+    env_sanc_aura = false
+    DoAfterSpecial(6,"check_sanc()",12) -- check if we are in sanc after 6 sec
+  else
+    env_sanc_queue2 = true
+  end
+end
 ------------------------------
 -- Warnings for pvp and afflix
 ------------------------------
@@ -500,16 +602,6 @@ function issue_warning(what, who)
   end
 end
 
-function setup_warning(c)
-  if c == 'gt' or c == 'ct' or c == 'repl' or c == 'say' or c == 'spouse' or c == 'local' then
-    warn_chan = c
-    SetVariable('warn_chan', warn_chan)
-    AnsiNote(logoshort..ColoursToANSI('@w channel set to: @Y'..warn_chan))
-  else
-    AnsiNote(logoshort..ColoursToANSI('@w accepted arguments are: @Ygt@w, @Yct@w, @Yrepl@w, @Ysay@w, @Yspouse@w, @Ylocal@w.'))
-  end
-end
-
 -------------------
 -- Helpers - output
 -------------------
@@ -523,10 +615,13 @@ function autospellup_help()
   else
     AnsiNote(ColoursToANSI('    @Yss auto        @w- toggle auto spellup.           Now: [ @ROFF @w]'))
   end
-  if env_active2 then
-    AnsiNote(ColoursToANSI('    @Yss sanc        @w- toggle auto aura switching.    Now: [ @GON @w]'))
+  if env_sanc_aura_lock then
+    AnsiNote(ColoursToANSI('    @Yss sanc        @w- replace sanc aura with spell.  Now: [ @GON @w]'))
   else
-    AnsiNote(ColoursToANSI('    @Yss sanc        @w- toggle auto aura switching.    Now: [ @ROFF @w]'))
+    AnsiNote(ColoursToANSI('    @Yss sanc        @w- force wearing sanc aura.       Now: [ @ROFF @w]'))
+  end
+  if gmcp('char.base.subclass') == 'Shaman' then
+    AnsiNote(ColoursToANSI('    @Yss gaia <dam>  @w- change damtype for GaiasFocus. Now: [ @W'..env_gaias_damtype..' @w]'))
   end
   if env_active3 then
     AnsiNote(ColoursToANSI('    @Yss warn        @w- toggle auto warnings. (pvp)    Now: [ @GON @w]'))
@@ -539,7 +634,6 @@ function autospellup_help()
     AnsiNote(ColoursToANSI('    @Yss debug       @w- toggle debug info.             Now: [ @ROFF @w]'))
   end
   AnsiNote(ColoursToANSI('    @Yss help        @w- this screen'))
-  AnsiNote(ColoursToANSI('    @Yss sanc reset  @w- manually reset sanctuary aura if needed'))
   AnsiNote(ColoursToANSI('    @Yss warn <chan> @w- set output to channel          Now: @Y'..warn_chan))
   AnsiNote(ColoursToANSI('    @Yss aura1 <num> @w- set non sanc aura id to <num>'))
   AnsiNote(ColoursToANSI('    @Yss aura2 <num> @w- set sanctuary aura id to <num>'))
@@ -551,7 +645,7 @@ function autospellup_help()
   AnsiNote(ColoursToANSI('    @wto their ID numbers. It will automatically trigger if in'))
   AnsiNote(ColoursToANSI('    @wcombat and keep you safe!'))
   AnsiNote(ColoursToANSI('    @wTo @Cnot @wuse bag1 or bag2, set it to zero: "@Yss bag1 0@w"'))
-   AnsiNote()
+  AnsiNote()
   AnsiNote(ColoursToANSI('  @CSaved:'))
   AnsiNote(ColoursToANSI('    @Y  non sanctuary aura ID:         @W')..PadString(sanc_aura1,16))
   AnsiNote(ColoursToANSI('    @Y  bag for non sanctuary aura ID: @W')..PadString(sanc_bag1,16))
@@ -577,6 +671,19 @@ function OnPluginInstall()
   else
     AnsiNote(logo..ColoursToANSI('@w type @Yss help @wfor commands. @Yautospellup @wis @W[ @ROFF @W]'))
   end
+end
+
+function OnPluginSaveState()
+  SetVariable('env_sanc_aura_lock', sb(env_sanc_aura_lock))
+  SetVariable('env_active', sb(env_active))
+  SetVariable('env_active3', sb(env_active3))
+  SetVariable('env_debug', sb(env_debug))
+  SetVariable('sanc_aura1', sanc_aura1)
+  SetVariable('sanc_aura2', sanc_aura2)
+  SetVariable('sanc_bag1', sanc_bag1)
+  SetVariable('sanc_bag2', sanc_bag2)
+  SetVariable('warn_chan', warn_chan)
+  SetVariable('env_gaias_damtype', env_gaias_damtype)
 end
 
 ]]>

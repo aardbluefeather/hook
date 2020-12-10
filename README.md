@@ -7,7 +7,7 @@ Get the [`Hook_Plugin_Manager_v1.33.zip`][package_install] and unzip it in your 
 ## Folders
 * <a href="#hook-miniepics">Hook MiniEpics</a> (v0.7): a collection of triggers for use in Titan and Terra miniepics - to make life there easier
 * <a href="#hook-shanty">Hook Shanty</a> (v1.7): contains a collection of sea shanties to make your puping sessions bearable - either by outputting to room channel (say) or to area channel (yell)
-* <a href="#hook-spellup">Hook Spellup</a> (v1.4): tries to keep you spelled up while honoring different states (afk, sleeping, resting, combat)
+* <a href="#hook-spellup">Hook Spellup</a> (v1.5): tries to keep you spelled up while honoring different states (afk, sleeping, resting, combat)
 * <a href="Links/LINKS.md">Links</a>: a collection of various, potentially useful, links to aard resources
 * <a href="pkg/">pkg</a>: package folder, this is where the plugin manager downloads updates from
 
@@ -50,11 +50,11 @@ For a summary of the most recent changes, please see [`Spellup CHANGELOG`][chang
 
     ss             - alias for manual spellup
     ss auto        - toggle auto spellup.           Now: [ ON ]
-    ss sanc        - toggle auto aura switching.    Now: [ ON ]
+    ss sanc        - force wearing sanc aura.       Now: [ OFF ]
+    ss gaia <dam>  - change damtype for GaiasFocus  Now: [ earth ]  *(Shaman only)
     ss warn        - toggle auto warnings. (pvp)    Now: [ ON ]
     ss debug       - toggle debug info.             Now: [ OFF ]
     ss help        - this screen
-    ss sanc reset  - manually reset sanctuary aura if needed
     ss warn <chan> - set output to channel          Now: gt
     ss aura1 <num> - set non sanc aura id to <num>
     ss aura2 <num> - set sanctuary aura id to <num>
